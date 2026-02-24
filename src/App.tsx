@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { FormEvent } from 'react'
 
 interface EducationItem {
   degree: string
@@ -173,6 +174,47 @@ function SectionHeading({ title, eyebrow }: { title: string; eyebrow: string }) 
 function App() {
   const [isDarkMode] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [submitMessage, setSubmitMessage] = useState('')
+
+  const formspreeEndpoint = import.meta.env.VITE_FORMSPREE_ENDPOINT as string | undefined
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (!formspreeEndpoint) {
+      setSubmitStatus('error')
+      setSubmitMessage('Form service is not configured yet. Add VITE_FORMSPREE_ENDPOINT in your .env file.')
+      return
+    }
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    setSubmitStatus('submitting')
+    setSubmitMessage('Sending your message...')
+
+    try {
+      const response = await fetch(formspreeEndpoint, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed request')
+      }
+
+      form.reset()
+      setSubmitStatus('success')
+      setSubmitMessage('Thanks! Your message has been sent successfully.')
+    } catch {
+      setSubmitStatus('error')
+      setSubmitMessage('Something went wrong while sending. Please try again.')
+    }
+  }
 
   return (
     <div
@@ -536,7 +578,7 @@ function App() {
               </p>
             </div>
 
-            <form className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-6">
+            <form onSubmit={handleContactSubmit} className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-6">
               <div>
                 <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-200">
                   Full Name
@@ -579,13 +621,31 @@ function App() {
                 />
               </div>
 
-              <p className="text-xs text-slate-400">Validation placeholder: required fields + email format checks.</p>
+              <p className="text-xs text-slate-400">
+                Messages are sent securely via Formspree.
+              </p>
+
+              {submitStatus !== 'idle' ? (
+                <p
+                  className={[
+                    'text-sm',
+                    submitStatus === 'success'
+                      ? 'text-emerald-300'
+                      : submitStatus === 'error'
+                        ? 'text-rose-300'
+                        : 'text-cyan-300',
+                  ].join(' ')}
+                >
+                  {submitMessage}
+                </p>
+              ) : null}
 
               <button
                 type="submit"
+                disabled={submitStatus === 'submitting'}
                 className="w-full rounded-lg bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 sm:w-auto"
               >
-                Send Message
+                {submitStatus === 'submitting' ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>
