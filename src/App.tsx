@@ -118,24 +118,29 @@ const services: Service[] = [
 
 const techStackGroups: TechStackGroup[] = [
   {
-    category: 'Frontend Core',
-    focus: 'Primary toolkit for scalable UI development',
-    items: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Next.js'],
+    category: 'Frontend (Web)',
+    focus: 'Building responsive and interactive web interfaces',
+    items: ['HTML', 'CSS', 'JavaScript', 'React JS', 'TypeScript', 'Tailwind CSS', 'Konva JS', 'Vite'],
   },
   {
-    category: 'State & Data',
-    focus: 'Predictable client data flow and caching',
-    items: ['TanStack Query', 'Redux Toolkit', 'Zustand', 'REST APIs', 'GraphQL'],
+    category: 'Mobile App Development',
+    focus: 'Cross-platform and native mobile development',
+    items: ['Flutter', 'Dart', 'React Native', 'Expo', 'Kotlin'],
   },
   {
-    category: 'Backend & Data',
-    focus: 'Supporting full-stack implementation when needed',
-    items: ['Node.js', 'Express', 'PostgreSQL', 'Prisma', 'Firebase'],
+    category: 'Backend, Cloud & Security',
+    focus: 'Server-side logic, cloud data, and authentication',
+    items: ['Django', 'Node.js', 'Firebase Firestore', 'Firebase Authentication', 'OAuth'],
   },
   {
-    category: 'Quality & Delivery',
-    focus: 'Testing, consistency, and release reliability',
-    items: ['Jest', 'React Testing Library', 'Playwright', 'ESLint', 'GitHub Actions'],
+    category: 'Design, Collaboration & Tooling',
+    focus: 'Design workflow, version control, and build tools',
+    items: ['Figma', 'Git', 'GitHub', 'Gradle'],
+  },
+  {
+    category: 'Programming Languages',
+    focus: 'Languages used across frontend, mobile, and backend work',
+    items: ['JavaScript', 'TypeScript', 'Dart', 'Kotlin', 'C++'],
   },
 ]
 
