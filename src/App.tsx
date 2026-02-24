@@ -98,12 +98,34 @@ const projects: Project[] = [
   },
 ]
 
-const services: Service[] = [
+const hardwareProjects: Project[] = [
   {
-    title: 'Full-Stack Development',
-    summary:
-      'End-to-end product engineering from UI architecture to API integration and deployment readiness.',
+    title: 'Smart Greenhouse Controller',
+    description:
+      'An IoT-based greenhouse monitor that automates irrigation and ventilation using real-time environmental sensor data.',
+    stack: ['ESP32', 'C++', 'MQTT', 'BME280'],
+    sourceUrl: '#',
+    liveUrl: '#',
   },
+  {
+    title: 'RFID Attendance System',
+    description:
+      'A classroom attendance tracker using RFID cards, local display feedback, and cloud sync for logs and reporting.',
+    stack: ['Arduino', 'RFID RC522', 'Firebase', 'C++'],
+    sourceUrl: '#',
+    liveUrl: '#',
+  },
+  {
+    title: 'Gesture-Controlled Robotic Arm',
+    description:
+      'A prototype robotic arm controlled by glove-based flex sensors and mapped servo movements for intuitive operation.',
+    stack: ['Arduino Nano', 'Servo Motors', 'Flex Sensors', 'Embedded C'],
+    sourceUrl: '#',
+    liveUrl: '#',
+  },
+]
+
+const services: Service[] = [
   {
     title: 'UI/UX Implementation',
     summary:
@@ -113,6 +135,11 @@ const services: Service[] = [
     title: 'Frontend Architecture',
     summary:
       'Scalable React + TypeScript codebases with maintainable patterns and predictable state strategies.',
+  },
+  {
+    title: 'Hardware Projects for STEM Students',
+    summary:
+      'Guidance and development support for student hardware builds, from microcontroller setup to sensor integration and project documentation.',
   },
 ]
 
@@ -131,6 +158,11 @@ const techStackGroups: TechStackGroup[] = [
     category: 'Backend, Cloud & Security',
     focus: 'Server-side logic, cloud data, and authentication',
     items: ['Django', 'Node.js', 'Firebase Firestore', 'Firebase Authentication', 'OAuth'],
+  },
+  {
+    category: 'Hardware & Microcontrollers',
+    focus: 'Embedded systems and electronics prototyping',
+    items: ['Arduino', 'ESP32', 'Raspberry Pi Pico', 'STM32', 'Microcontrollers'],
   },
   {
     category: 'Design, Collaboration & Tooling',
@@ -257,6 +289,9 @@ function App() {
             <a href="#projects" className="transition hover:text-cyan-300">
               Projects
             </a>
+            <a href="#hardware-projects" className="transition hover:text-cyan-300">
+              Hardware
+            </a>
             <a href="#contact" className="transition hover:text-cyan-300">
               Contact
             </a>
@@ -332,6 +367,16 @@ function App() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Projects
+              </a>
+              <a
+                href="#hardware-projects"
+                className={[
+                  'transition hover:text-cyan-300',
+                  isDarkMode ? 'text-slate-300' : 'text-slate-700',
+                ].join(' ')}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Hardware
               </a>
               <a
                 href="#contact"
@@ -446,24 +491,6 @@ function App() {
           </div>
         </section>
 
-        <section id="certifications" className="py-14 sm:py-20">
-          <SectionHeading eyebrow="Certifications" title="Professional credentials" />
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {certifications.map((certification) => (
-              <article
-                key={`${certification.title}-${certification.credentialId}`}
-                className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
-              >
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{certification.year}</p>
-                <h3 className="mt-2 text-base font-semibold text-slate-100">{certification.title}</h3>
-                <p className="mt-2 text-sm text-cyan-300">{certification.issuer}</p>
-                <p className="mt-3 text-xs text-slate-400">Credential ID: {certification.credentialId}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
         <section id="experience" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Works & Experience" title="Professional history" />
 
@@ -485,6 +512,24 @@ function App() {
                     </li>
                   ))}
                 </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="certifications" className="py-14 sm:py-20">
+          <SectionHeading eyebrow="Certifications" title="Professional credentials" />
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {certifications.map((certification) => (
+              <article
+                key={`${certification.title}-${certification.credentialId}`}
+                className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              >
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{certification.year}</p>
+                <h3 className="mt-2 text-base font-semibold text-slate-100">{certification.title}</h3>
+                <p className="mt-2 text-sm text-cyan-300">{certification.issuer}</p>
+                <p className="mt-3 text-xs text-slate-400">Credential ID: {certification.credentialId}</p>
               </article>
             ))}
           </div>
@@ -548,6 +593,42 @@ function App() {
                   </a>
                   <a href={project.liveUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
                     Live Demo
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section id="hardware-projects" className="py-14 sm:py-20">
+          <SectionHeading eyebrow="Hardware Projects" title="Embedded and IoT builds" />
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {hardwareProjects.map((project) => (
+              <article
+                key={project.title}
+                className="flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              >
+                <h3 className="text-lg font-semibold text-slate-100">{project.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-300">{project.description}</p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {project.stack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-200"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex items-center gap-4 text-sm">
+                  <a href={project.sourceUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                    Source
+                  </a>
+                  <a href={project.liveUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                    Demo
                   </a>
                 </div>
               </article>

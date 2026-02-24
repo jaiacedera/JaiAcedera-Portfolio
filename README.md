@@ -14,7 +14,7 @@ Single-page portfolio website built with React, TypeScript, Vite, and Tailwind C
 - Responsive single-page portfolio layout
 - Dark-themed Slate/Cyan visual style
 - Hero section with profile image
-- About, Education, Certifications, Internship Experience, Tech Stack, Projects, Services
+- About, Education, Certifications, Internship Experience, Tech Stack, Projects, Hardware Projects, Services
 - Contact form integration via Formspree
 - Mobile-friendly top navigation and section anchors
 
