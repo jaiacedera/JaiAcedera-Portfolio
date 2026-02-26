@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import ProfileCard from './components/ProfileCard';
+import { PhotoCardSwiper } from './PhotoCardSwiper';
 import type { FormEvent } from 'react'
 
 interface EducationItem {
@@ -444,7 +446,7 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-12 lg:px-10 lg:pt-14">
-        <section id="hero" className="pb-16 pt-8 sm:pb-24 sm:pt-12 lg:pt-16">
+        <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
           <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
               <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-300/80">
@@ -478,11 +480,21 @@ function App() {
             </div>
 
             <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-              <div className="absolute -inset-2 rounded-2xl bg-cyan-400/10 blur-2xl" aria-hidden="true" />
-              <img
-                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80"
-                alt="Workspace and laptop setup"
-                className="relative h-64 w-full rounded-2xl border border-slate-800 object-cover shadow-2xl shadow-slate-950/40 sm:h-95 lg:h-105"
+              <ProfileCard
+                name="Jairah Denise C. Acedera"
+                title="Computer Engineer"
+                handle="javicodes"
+                status="Online"
+                contactText="Contact Me"
+                avatarUrl="/profile-photo.jpg"
+                showUserInfo={false}
+                enableTilt={true}
+                enableMobileTilt={false}
+                onContactClick={() => console.log('Contact clicked')}
+                behindGlowColor="rgba(125, 190, 255, 0.67)"
+                iconUrl="/assets/demo/iconpattern.png"
+                behindGlowEnabled={true}
+                innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
               />
             </div>
           </div>
@@ -491,16 +503,21 @@ function App() {
         <section id="about" className="py-14 sm:py-20">
           <SectionHeading eyebrow="About Me" title="Building products with clarity and intent" />
 
-          <div className="max-w-4xl space-y-6 text-base leading-relaxed text-slate-300">
-            <p>
-              I approach frontend development as both an engineering and design discipline. Every screen should
-              communicate clearly, perform quickly, and remain maintainable as products evolve.
-            </p>
-            <p>
-              My workflow prioritizes semantic markup, accessible interactions, and modular architecture with
-              TypeScript-driven reliability. I enjoy translating complex requirements into elegant,
-              production-ready interfaces.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6 text-base leading-relaxed text-slate-300">
+              <p>
+                I approach frontend development as both an engineering and design discipline. Every screen should
+                communicate clearly, perform quickly, and remain maintainable as products evolve.
+              </p>
+              <p>
+                My workflow prioritizes semantic markup, accessible interactions, and modular architecture with
+                TypeScript-driven reliability. I enjoy translating complex requirements into elegant,
+                production-ready interfaces.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <PhotoCardSwiper />
+            </div>
           </div>
         </section>
 
