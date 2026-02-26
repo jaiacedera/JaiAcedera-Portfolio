@@ -256,7 +256,7 @@ function App() {
   // Typing animation for developer roles
   const roles = React.useMemo(() => [
     'Frontend Developer',
-    'UI/UX Developer',
+    'UI/UX ',
     'FullStack Developer',
     'Quality Assurance Engineer',
   ], []);
@@ -456,9 +456,9 @@ function App() {
               </h1>
 
               <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 sm:mt-8 sm:text-lg">
-                I craft polished web experiences that balance clean architecture, thoughtful interaction design,
-                and scalable engineering practices. I specialize in modern React ecosystems with an emphasis on
-                maintainability and speed.
+                I craft polished web experiences that prioritize maintainability, speed, and clean architecture. 
+                As a Computer Engineering graduate, I specialize in developing efficient software solutions that 
+                bridge the gap between high-level web development and real-world hardware integration.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
