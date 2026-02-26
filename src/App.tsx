@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import type { FormEvent } from 'react'
 
 interface EducationItem {
@@ -43,9 +43,9 @@ interface Certification {
 
 const education: EducationItem[] = [
   {
-    degree: 'B.S. in Computer Science',
-    institution: 'Metropolitan University',
-    period: '2017 — 2021',
+    degree: 'B.S. in Computer Engineering',
+    institution: 'Batangas State University',
+    period: '2022 — 2026',
     details:
       'Focused on software engineering, human-computer interaction, and distributed systems.',
   },
@@ -60,9 +60,9 @@ const education: EducationItem[] = [
 
 const experiences: ExperienceItem[] = [
   {
-    role: 'Frontend Developer Intern',
-    company: 'Blueframe Labs',
-    period: '2024',
+    role: 'Software Developer Intern',
+    company: 'Creotec Philippines Inc',
+    period: 'February 2026 - April 2026',
     achievements: [
       'Built responsive user interfaces using React and TypeScript under senior developer mentorship.',
       'Implemented reusable components and assisted with API integration for dashboard features.',
@@ -253,6 +253,41 @@ function App() {
     }
   }
 
+  // Typing animation for developer roles
+  const roles = React.useMemo(() => [
+    'Frontend Developer',
+    'UI/UX Developer',
+    'FullStack Developer',
+    'Quality Assurance Engineer',
+  ], []);
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayedRole, setDisplayedRole] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [typingSpeed, setTypingSpeed] = useState(120);
+
+  // Typing effect
+  React.useEffect(() => {
+    const currentRole = roles[roleIndex];
+    let timer: ReturnType<typeof setTimeout>;
+    if (!isDeleting && displayedRole.length < currentRole.length) {
+      setTypingSpeed(120);
+      timer = setTimeout(() => {
+        setDisplayedRole(currentRole.slice(0, displayedRole.length + 1));
+      }, typingSpeed);
+    } else if (isDeleting && displayedRole.length > 0) {
+      setTypingSpeed(60);
+      timer = setTimeout(() => {
+        setDisplayedRole(currentRole.slice(0, displayedRole.length - 1));
+      }, typingSpeed);
+    } else if (!isDeleting && displayedRole.length === currentRole.length) {
+      timer = setTimeout(() => setIsDeleting(true), 1000);
+    } else if (isDeleting && displayedRole.length === 0) {
+      setIsDeleting(false);
+      setRoleIndex((prev) => (prev + 1) % roles.length);
+    }
+    return () => clearTimeout(timer);
+  }, [displayedRole, isDeleting, roleIndex, roles, typingSpeed]);
+
   return (
     <div
       className={[
@@ -278,7 +313,6 @@ function App() {
               className="h-9 w-9 rounded-full border border-cyan-300/60 object-cover"
             />
           </a>
-
           <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
             <a href="#about" className="transition hover:text-cyan-300">
               About
@@ -296,7 +330,6 @@ function App() {
               Contact
             </a>
           </nav>
-
           <div className="ml-auto flex items-center gap-2 md:justify-self-end">
             <a
               href="#"
@@ -307,7 +340,6 @@ function App() {
                 <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.45-1.15-1.12-1.45-1.12-1.45-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.11-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.4 9.4 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.37.21 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.35 4.69-4.58 4.94.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
               </svg>
             </a>
-
             <a
               href="#"
               aria-label="LinkedIn"
@@ -317,7 +349,6 @@ function App() {
                 <path d="M6.94 8.5H3.56V20h3.38V8.5Zm.22-3.56a1.95 1.95 0 1 0-3.9 0 1.95 1.95 0 0 0 3.9 0ZM20 13.41c0-3.02-1.61-5.06-4.38-5.06-2.02 0-2.92 1.1-3.43 1.88V8.5H8.81V20h3.38v-5.69c0-1.5.29-2.96 2.14-2.96 1.82 0 1.85 1.7 1.85 3.06V20h3.37v-6.59Z" />
               </svg>
             </a>
-
             <button
               type="button"
               onClick={() => setIsMenuOpen((value) => !value)}
@@ -329,7 +360,6 @@ function App() {
             </button>
           </div>
         </div>
-
         {isMenuOpen ? (
           <nav
             className={[
@@ -388,7 +418,6 @@ function App() {
               >
                 Contact
               </a>
-
               <div className="mt-2 flex items-center gap-2">
                 <a
                   href="#"
@@ -419,7 +448,7 @@ function App() {
           <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
               <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-300/80">
-                Senior Frontend Developer
+                Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
               </p>
 
               <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-100 sm:text-5xl lg:text-6xl">

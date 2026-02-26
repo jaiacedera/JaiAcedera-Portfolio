@@ -6,8 +6,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>jaiacedera-portfolio-website</title>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="margin:0; padding:0;">
+    <div class="finisher-header" style="position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:-1;"></div>
+    <div id="root" style="position:relative; z-index:1;"></div>
+    <script src="/finisher-header.es5.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      new FinisherHeader({
+        "count": 100,
+        "size": {
+          "min": 2,
+          "max": 8,
+          "pulse": 0
+        },
+        "speed": {
+          "x": {
+            "min": 0,
+            "max": 0.4
+          },
+          "y": {
+            "min": 0,
+            "max": 0.6
+          }
+        },
+        "colors": {
+          "background": "#020617",
+          "particles": [
+            "#fbfcca",
+            "#d7f3fe",
+            "#ffd0a7"
+          ]
+        },
+        "blending": "overlay",
+        "opacity": {
+          "center": 1,
+          "edge": 0
+        },
+        "skew": -2,
+        "shapes": [
+          "c"
+        ]
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
