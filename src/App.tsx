@@ -68,7 +68,7 @@ const experiences: ExperienceItem[] = [
 
 const projects: Project[] = [
   {
-    title: 'Buso-Buso Emergency Operations Center App',
+    title: 'Buso-Buso EOC App',
     description:
       'Buso-Buso Mobile App is a mobile Emergency Operations Center (EOC) app for Barangay Buso-Buso residents. It helps residents register their profile, submit distress reports, track report status, and view community alerts in real time.',
     stack: ['React Native', 'TypeScript', 'Tailwind', 'Expo', 'Firebase Firestore', 'gpt-4.1'],
@@ -103,7 +103,7 @@ const projects: Project[] = [
 
 const hardwareProjects: Project[] = [
   {
-    title: 'Design of a Stored Program Machine for Car Kit Control Using Basic Digital Components',
+    title: 'Stored Program Machine for Car Kit Control',
     description:
       'Designed custom instruction sets for precise program execution. Integrated modular hardware, including memory and logic units, to ensure system stability. Applied computer architecture principles to develop and operate a functional car kit.',
     stack: ['Instruction Memory', '74LS161 Binary Counter', '74LS173 Register IC', 'L298N Motor Driver', '555 Timer'],

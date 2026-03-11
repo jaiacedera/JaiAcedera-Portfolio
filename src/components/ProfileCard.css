@@ -472,6 +472,20 @@
 }
 
 @media (max-width: 640px) {
+  .pc-card-wrapper {
+    --behind-glow-size: 28% !important;
+  }
+
+  .pc-behind {
+    display: none;
+  }
+
+  .pc-shine,
+  .pc-glare {
+    display: grid;
+    opacity: 0.55;
+  }
+
   .pc-card-wrapper,
   .pc-card-shell {
     width: 100%;
