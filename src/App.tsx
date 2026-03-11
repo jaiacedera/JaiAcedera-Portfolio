@@ -296,6 +296,21 @@ function App() {
     setActiveProjectIndex((prev) => (prev + 1) % projects.length)
   }
 
+  const [desktopProjectStartIndex, setDesktopProjectStartIndex] = useState(0)
+
+  const goToPreviousDesktopProjects = () => {
+    setDesktopProjectStartIndex((prev) => (prev - 1 + projects.length) % projects.length)
+  }
+
+  const goToNextDesktopProjects = () => {
+    setDesktopProjectStartIndex((prev) => (prev + 1) % projects.length)
+  }
+
+  const visibleDesktopProjects =
+    projects.length === 0
+      ? []
+      : Array.from({ length: Math.min(3, projects.length) }, (_, offset) => projects[(desktopProjectStartIndex + offset) % projects.length])
+
   const [activeHardwareIndex, setActiveHardwareIndex] = useState(0)
 
   const goToPreviousHardware = () => {
@@ -720,7 +735,7 @@ function App() {
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
             <article
-              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               onTouchStart={(e) => { projectTouchStartX.current = e.touches[0].clientX }}
               onTouchEnd={(e) => {
                 if (projectTouchStartX.current === null) return
@@ -771,37 +786,57 @@ function App() {
             </div>
           </div>
 
-          {/* Desktop grid */}
-          <div className="hidden lg:grid gap-6 lg:grid-cols-3">
-            {projects.map((project) => (
-              <article
-                key={project.title}
-                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
-              >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
+          {/* Laptop/Desktop view: 3 cards + right arrow */}
+          <div className="hidden lg:flex items-stretch gap-3">
+            <button
+              type="button"
+              onClick={goToPreviousDesktopProjects}
+              className="self-center rounded-full border border-slate-300 px-3 py-2 text-lg font-semibold leading-none text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-200 dark:hover:text-cyan-300"
+              aria-label="Show previous projects"
+            >
+              &lt;
+            </button>
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+            <div className="grid flex-1 gap-6 lg:grid-cols-3">
+              {visibleDesktopProjects.map((project, index) => (
+                <article
+                  key={`${project.title}-${desktopProjectStartIndex}-${index}`}
+                  className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                >
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
-                <div className="mt-6 flex items-center gap-4 text-sm">
-                  <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                    Source
-                  </a>
-                  <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                    Live Demo
-                  </a>
-                </div>
-              </article>
-            ))}
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.stack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-auto pt-6 flex items-center gap-4 text-sm">
+                    <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                      Source
+                    </a>
+                    <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                      Live Demo
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={goToNextDesktopProjects}
+              className="self-center rounded-full border border-slate-300 px-3 py-2 text-lg font-semibold leading-none text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-200 dark:hover:text-cyan-300"
+              aria-label="Show next projects"
+            >
+              &gt;
+            </button>
           </div>
         </section>
 
