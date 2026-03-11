@@ -1,5 +1,5 @@
 import Stack from './components/Stack';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import ProfileCard from './components/ProfileCard';
 import type { FormEvent } from 'react'
 
@@ -278,6 +278,28 @@ function App() {
   const [displayedRole, setDisplayedRole] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [typingSpeed, setTypingSpeed] = useState(120)
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+
+  const goToPreviousProject = () => {
+    setActiveProjectIndex((prev) => (prev - 1 + projects.length) % projects.length)
+  }
+
+  const goToNextProject = () => {
+    setActiveProjectIndex((prev) => (prev + 1) % projects.length)
+  }
+
+  const [activeHardwareIndex, setActiveHardwareIndex] = useState(0)
+
+  const goToPreviousHardware = () => {
+    setActiveHardwareIndex((prev) => (prev - 1 + hardwareProjects.length) % hardwareProjects.length)
+  }
+
+  const goToNextHardware = () => {
+    setActiveHardwareIndex((prev) => (prev + 1) % hardwareProjects.length)
+  }
+
+  const projectTouchStartX = useRef<number | null>(null)
+  const hardwareTouchStartX = useRef<number | null>(null)
 
   const aboutStackWidth = 250
   const aboutStackHeight = 250
@@ -687,7 +709,62 @@ function App() {
         <section id="projects" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Projects" title="Selected work" />
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Mobile carousel */}
+          <div className="space-y-4 lg:hidden">
+            <article
+              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              onTouchStart={(e) => { projectTouchStartX.current = e.touches[0].clientX }}
+              onTouchEnd={(e) => {
+                if (projectTouchStartX.current === null) return
+                const diff = projectTouchStartX.current - e.changedTouches[0].clientX
+                if (Math.abs(diff) > 40) { if (diff > 0) goToNextProject(); else goToPreviousProject() }
+                projectTouchStartX.current = null
+              }}
+            >
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{projects[activeProjectIndex].title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{projects[activeProjectIndex].description}</p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {projects[activeProjectIndex].stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex items-center gap-4 text-sm">
+                <a href={projects[activeProjectIndex].sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                  Source
+                </a>
+                <a href={projects[activeProjectIndex].liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                  Live Demo
+                </a>
+              </div>
+            </article>
+
+            <div className="flex justify-center gap-2">
+              {projects.map((project, index) => (
+                <button
+                  key={project.title}
+                  type="button"
+                  onClick={() => setActiveProjectIndex(index)}
+                  className={[
+                    'h-2.5 w-2.5 rounded-full transition',
+                    index === activeProjectIndex
+                      ? 'bg-cyan-600 dark:bg-cyan-300'
+                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                  ].join(' ')}
+                  aria-label={`Go to project ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="hidden lg:grid gap-6 lg:grid-cols-3">
             {projects.map((project) => (
               <article
                 key={project.title}
@@ -723,7 +800,62 @@ function App() {
         <section id="hardware-projects" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Hardware Projects" title="Embedded and IoT builds" />
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Mobile carousel */}
+          <div className="space-y-4 lg:hidden">
+            <article
+              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              onTouchStart={(e) => { hardwareTouchStartX.current = e.touches[0].clientX }}
+              onTouchEnd={(e) => {
+                if (hardwareTouchStartX.current === null) return
+                const diff = hardwareTouchStartX.current - e.changedTouches[0].clientX
+                if (Math.abs(diff) > 40) { if (diff > 0) goToNextHardware(); else goToPreviousHardware() }
+                hardwareTouchStartX.current = null
+              }}
+            >
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{hardwareProjects[activeHardwareIndex].title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{hardwareProjects[activeHardwareIndex].description}</p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {hardwareProjects[activeHardwareIndex].stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex items-center gap-4 text-sm">
+                <a href={hardwareProjects[activeHardwareIndex].sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                  Source
+                </a>
+                <a href={hardwareProjects[activeHardwareIndex].liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                  Demo
+                </a>
+              </div>
+            </article>
+
+            <div className="flex justify-center gap-2">
+              {hardwareProjects.map((project, index) => (
+                <button
+                  key={project.title}
+                  type="button"
+                  onClick={() => setActiveHardwareIndex(index)}
+                  className={[
+                    'h-2.5 w-2.5 rounded-full transition',
+                    index === activeHardwareIndex
+                      ? 'bg-cyan-600 dark:bg-cyan-300'
+                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                  ].join(' ')}
+                  aria-label={`Go to project ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop grid */}
+          <div className="hidden lg:grid gap-6 lg:grid-cols-3">
             {hardwareProjects.map((project) => (
               <article
                 key={project.title}
