@@ -211,6 +211,13 @@ function SectionHeading({ title, eyebrow }: { title: string; eyebrow: string }) 
 }
 
 function App() {
+  const linkedInUrl = 'https://www.linkedin.com/in/jairah-denise-acedera-17444a175?'
+  const githubUrl = 'https://github.com/jaiacedera'
+
+  const handleExternalRedirect = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
   const [isDarkMode] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
@@ -266,6 +273,9 @@ function App() {
   const [displayedRole, setDisplayedRole] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [typingSpeed, setTypingSpeed] = useState(120)
+
+  const aboutStackWidth = 250
+  const aboutStackHeight = 250
 
   const aboutStackCards = React.useMemo(
     () =>
@@ -342,7 +352,13 @@ function App() {
         </nav>
           <div className="ml-auto flex items-center gap-2 md:justify-self-end">
             <a
-              href="#"
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => {
+                event.preventDefault()
+                handleExternalRedirect(githubUrl)
+              }}
               aria-label="GitHub"
               className="hidden rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300 md:inline-flex"
             >
@@ -351,7 +367,13 @@ function App() {
               </svg>
             </a>
             <a
-              href="#"
+              href={linkedInUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => {
+                event.preventDefault()
+                handleExternalRedirect(linkedInUrl)
+              }}
               aria-label="LinkedIn"
               className="hidden rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300 md:inline-flex"
             >
@@ -430,7 +452,13 @@ function App() {
               </a>
               <div className="mt-2 flex items-center gap-2">
                 <a
-                  href="#"
+                  href={githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    handleExternalRedirect(githubUrl)
+                  }}
                   aria-label="GitHub"
                   className="inline-flex rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300"
                 >
@@ -439,7 +467,13 @@ function App() {
                   </svg>
                 </a>
                 <a
-                  href="#"
+                  href={linkedInUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    handleExternalRedirect(linkedInUrl)
+                  }}
                   aria-label="LinkedIn"
                   className="inline-flex rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300"
                 >
@@ -487,7 +521,7 @@ function App() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative mx-auto flex w-full justify-center lg:max-w-none">
               <ProfileCard
                 name="Jairah Denise C. Acedera"
                 title="Computer Engineer"
@@ -524,18 +558,18 @@ function App() {
               </p>
             </div>
             <div className="flex justify-center">
-              {/* Stack usage example with custom images and props */}
-              <div style={{ width: 208, height: 208 }}>
-                <Stack
-                  randomRotation={false}
-                  sensitivity={200}
-                  sendToBackOnClick={true}
-                  cards={aboutStackCards}
-                  autoplay={false}
-                  autoplayDelay={3000}
-                  pauseOnHover={false}
-                />
-              </div>
+              {/* Edit these props to customize Stack size. */}
+              <Stack
+                randomRotation={false}
+                sensitivity={200}
+                sendToBackOnClick={true}
+                cards={aboutStackCards}
+                autoplay={false}
+                autoplayDelay={3000}
+                pauseOnHover={false}
+                width={aboutStackWidth}
+                height={aboutStackHeight}
+              />
             </div>
           </div>
         </section>
@@ -807,14 +841,29 @@ function App() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-center text-sm text-slate-400 sm:flex-row sm:px-6 sm:text-left lg:px-10">
           <p>© {new Date().getFullYear()} Jai Acedera. All rights reserved.</p>
           <div className="flex items-center gap-4">
-            <a href="#" className="transition hover:text-cyan-300">
+            <a
+              href={linkedInUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => {
+                event.preventDefault()
+                handleExternalRedirect(linkedInUrl)
+              }}
+              className="transition hover:text-cyan-300"
+            >
               LinkedIn
             </a>
-            <a href="#" className="transition hover:text-cyan-300">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(event) => {
+                event.preventDefault()
+                handleExternalRedirect(githubUrl)
+              }}
+              className="transition hover:text-cyan-300"
+            >
               GitHub
-            </a>
-            <a href="#" className="transition hover:text-cyan-300">
-              Dribbble
             </a>
           </div>
         </div>

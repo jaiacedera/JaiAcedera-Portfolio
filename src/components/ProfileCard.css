@@ -471,10 +471,26 @@
   }
 }
 
+@media (max-width: 640px) {
+  .pc-card-wrapper,
+  .pc-card-shell {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .pc-card {
+    width: min(100%, 340px);
+    height: auto;
+    max-height: none;
+  }
+}
+
 @media (max-width: 480px) {
   .pc-card {
-    height: 60svh;
-    max-height: 380px;
+    width: min(100%, 300px);
+    height: auto;
+    max-height: none;
   }
 
   .pc-details {
@@ -521,8 +537,9 @@
 
 @media (max-width: 320px) {
   .pc-card {
-    height: 55svh;
-    max-height: 320px;
+    width: min(100%, 260px);
+    height: auto;
+    max-height: none;
   }
 
   .pc-details h3 {
