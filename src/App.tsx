@@ -51,13 +51,6 @@ const education: EducationItem[] = [
     details:
       'Focused on software engineering, human-computer interaction, and distributed systems.',
   },
-  {
-    degree: 'Frontend Specialization',
-    institution: 'Design + Code Institute',
-    period: '2022',
-    details:
-      'Advanced training in modern React architecture, performance optimization, and accessible UI.',
-  },
 ]
 
 const experiences: ExperienceItem[] = [
