@@ -118,14 +118,6 @@ const hardwareProjects: Project[] = [
     sourceUrl: '#',
     liveUrl: '#',
   },
-  {
-    title: 'Gesture-Controlled Robotic Arm',
-    description:
-      'A prototype robotic arm controlled by glove-based flex sensors and mapped servo movements for intuitive operation.',
-    stack: ['Arduino Nano', 'Servo Motors', 'Flex Sensors', 'Embedded C'],
-    sourceUrl: '#',
-    liveUrl: '#',
-  },
 ]
 
 const services: Service[] = [
