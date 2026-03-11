@@ -93,7 +93,7 @@ const projects: Project[] = [
   {
     title: 'CREO MechaLab X',
     description:
-      'CREO MechaLab X is an interactive web platform that compresses the 20-day Mechatronics NC II training into a structured, one-day digital experience. It features a trainee portal for wiring simulations and module viewing, alongside a robust admin system for cohort management and progress tracking.',
+      'CREO MechaLab X is an interactive web platform that condenses 20-day Mechatronics training into a one-day digital experience. It features a trainee portal for simulations and modules, paired with an admin system for cohort management and progress tracking.',
     stack: ['React.js', 'Node', 'MySQL', 'Konva JS', 'Docker', 'Tailwind CSS', 'TypeScript'],
     sourceUrl: 'https://github.com/Qualestrom/creotec-mechalab-x',
     liveUrl: '#',
@@ -101,7 +101,7 @@ const projects: Project[] = [
   {
     title: 'Cradle',
     description:
-      'CRADLE is a secure Android application that connects landlords and tenants in Golden Country Homes for dormitory and bed space rentals. It features a real-time cloud database for seamless synchronization and verified listings to minimize scam risks. With role-based authentication, the platform provides tailored, secure access for both renters and owners.',
+      'CRADLE is a secure Android app for dormitory rentals, featuring real-time synchronization and verified listings to prevent scams. It provides tailored, role-based access for both landlords and tenants to ensure a seamless rental process.',
     stack: ['React.js', 'Node', 'MySQL', 'Konva JS', 'Docker', 'Tailwind CSS', 'TypeScript'],
     sourceUrl: 'https://github.com/Qualestrom/CRADLE_PROJECT',
     liveUrl: '#',
@@ -320,6 +320,21 @@ function App() {
   const goToNextHardware = () => {
     setActiveHardwareIndex((prev) => (prev + 1) % hardwareProjects.length)
   }
+
+  const [desktopHardwareStartIndex, setDesktopHardwareStartIndex] = useState(0)
+
+  const goToPreviousDesktopHardware = () => {
+    setDesktopHardwareStartIndex((prev) => (prev - 1 + hardwareProjects.length) % hardwareProjects.length)
+  }
+
+  const goToNextDesktopHardware = () => {
+    setDesktopHardwareStartIndex((prev) => (prev + 1) % hardwareProjects.length)
+  }
+
+  const visibleDesktopHardwareProjects =
+    hardwareProjects.length === 0
+      ? []
+      : Array.from({ length: Math.min(3, hardwareProjects.length) }, (_, offset) => hardwareProjects[(desktopHardwareStartIndex + offset) % hardwareProjects.length])
 
   const projectTouchStartX = useRef<number | null>(null)
   const hardwareTouchStartX = useRef<number | null>(null)
@@ -768,21 +783,41 @@ function App() {
               </div>
             </article>
 
-            <div className="flex justify-center gap-2">
-              {projects.map((project, index) => (
-                <button
-                  key={project.title}
-                  type="button"
-                  onClick={() => setActiveProjectIndex(index)}
-                  className={[
-                    'h-2.5 w-2.5 rounded-full transition',
-                    index === activeProjectIndex
-                      ? 'bg-cyan-600 dark:bg-cyan-300'
-                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
-                  ].join(' ')}
-                  aria-label={`Go to project ${index + 1}`}
-                />
-              ))}
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={goToPreviousProject}
+                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Previous project"
+              >
+                &lt;
+              </button>
+
+              <div className="flex justify-center gap-2">
+                {projects.map((project, index) => (
+                  <button
+                    key={project.title}
+                    type="button"
+                    onClick={() => setActiveProjectIndex(index)}
+                    className={[
+                      'h-2.5 w-2.5 rounded-full transition',
+                      index === activeProjectIndex
+                        ? 'bg-cyan-600 dark:bg-cyan-300'
+                        : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                    ].join(' ')}
+                    aria-label={`Go to project ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={goToNextProject}
+                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Next project"
+              >
+                &gt;
+              </button>
             </div>
           </div>
 
@@ -846,7 +881,7 @@ function App() {
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
             <article
-              className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               onTouchStart={(e) => { hardwareTouchStartX.current = e.touches[0].clientX }}
               onTouchEnd={(e) => {
                 if (hardwareTouchStartX.current === null) return
@@ -871,47 +906,91 @@ function App() {
 
             </article>
 
-            <div className="flex justify-center gap-2">
-              {hardwareProjects.map((project, index) => (
-                <button
-                  key={project.title}
-                  type="button"
-                  onClick={() => setActiveHardwareIndex(index)}
-                  className={[
-                    'h-2.5 w-2.5 rounded-full transition',
-                    index === activeHardwareIndex
-                      ? 'bg-cyan-600 dark:bg-cyan-300'
-                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
-                  ].join(' ')}
-                  aria-label={`Go to project ${index + 1}`}
-                />
-              ))}
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                onClick={goToPreviousHardware}
+                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Previous hardware project"
+              >
+                &lt;
+              </button>
+
+              <div className="flex justify-center gap-2">
+                {hardwareProjects.map((project, index) => (
+                  <button
+                    key={project.title}
+                    type="button"
+                    onClick={() => setActiveHardwareIndex(index)}
+                    className={[
+                      'h-2.5 w-2.5 rounded-full transition',
+                      index === activeHardwareIndex
+                        ? 'bg-cyan-600 dark:bg-cyan-300'
+                        : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                    ].join(' ')}
+                    aria-label={`Go to project ${index + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={goToNextHardware}
+                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Next hardware project"
+              >
+                &gt;
+              </button>
             </div>
           </div>
 
-          {/* Desktop grid */}
-          <div className="hidden lg:grid gap-6 lg:grid-cols-3">
-            {hardwareProjects.map((project) => (
-              <article
-                key={project.title}
-                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+          {/* Desktop view: 3 cards + arrows when more than 3 projects */}
+          <div className="hidden lg:flex items-stretch gap-3">
+            {hardwareProjects.length > 3 && (
+              <button
+                type="button"
+                onClick={goToPreviousDesktopHardware}
+                className="self-center rounded-full border border-slate-300 px-3 py-2 text-lg font-semibold leading-none text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-200 dark:hover:text-cyan-300"
+                aria-label="Show previous hardware projects"
               >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
+                &lt;
+              </button>
+            )}
 
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+            <div className="grid flex-1 gap-6 lg:grid-cols-3">
+              {visibleDesktopHardwareProjects.map((project, index) => (
+                <article
+                  key={`${project.title}-${desktopHardwareStartIndex}-${index}`}
+                  className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                >
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
-              </article>
-            ))}
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {project.stack.map((tech) => (
+                      <span
+                        key={tech}
+                        className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                </article>
+              ))}
+            </div>
+
+            {hardwareProjects.length > 3 && (
+              <button
+                type="button"
+                onClick={goToNextDesktopHardware}
+                className="self-center rounded-full border border-slate-300 px-3 py-2 text-lg font-semibold leading-none text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-200 dark:hover:text-cyan-300"
+                aria-label="Show next hardware projects"
+              >
+                &gt;
+              </button>
+            )}
           </div>
         </section>
 
