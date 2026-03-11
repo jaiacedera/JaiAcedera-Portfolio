@@ -98,14 +98,22 @@ const projects: Project[] = [
     sourceUrl: 'https://github.com/Qualestrom/creotec-mechalab-x',
     liveUrl: '#',
   },
+  {
+    title: 'Cradle',
+    description:
+      'CRADLE is a secure Android application that connects landlords and tenants in Golden Country Homes for dormitory and bed space rentals. It features a real-time cloud database for seamless synchronization and verified listings to minimize scam risks. With role-based authentication, the platform provides tailored, secure access for both renters and owners.',
+    stack: ['React.js', 'Node', 'MySQL', 'Konva JS', 'Docker', 'Tailwind CSS', 'TypeScript'],
+    sourceUrl: 'https://github.com/Qualestrom/CRADLE_PROJECT',
+    liveUrl: '#',
+  },
 ]
 
 const hardwareProjects: Project[] = [
   {
-    title: 'Smart Greenhouse Controller',
+    title: 'Design of a Stored Program Machine for Car Kit Control Using Basic Digital Components',
     description:
-      'An IoT-based greenhouse monitor that automates irrigation and ventilation using real-time environmental sensor data.',
-    stack: ['ESP32', 'C++', 'MQTT', 'BME280'],
+      'Designed custom instruction sets for precise program execution. Integrated modular hardware, including memory and logic units, to ensure system stability. Applied computer architecture principles to develop and operate a functional car kit.',
+    stack: ['Instruction Memory', '74LS161 Binary Counter', '74LS173 Register IC', 'L298N Motor Driver', '555 Timer'],
     sourceUrl: '#',
     liveUrl: '#',
   },
@@ -826,14 +834,6 @@ function App() {
                 ))}
               </div>
 
-              <div className="mt-6 flex items-center gap-4 text-sm">
-                <a href={hardwareProjects[activeHardwareIndex].sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                  Source
-                </a>
-                <a href={hardwareProjects[activeHardwareIndex].liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                  Demo
-                </a>
-              </div>
             </article>
 
             <div className="flex justify-center gap-2">
@@ -875,14 +875,6 @@ function App() {
                   ))}
                 </div>
 
-                <div className="mt-6 flex items-center gap-4 text-sm">
-                  <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                    Source
-                  </a>
-                  <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                    Demo
-                  </a>
-                </div>
               </article>
             ))}
           </div>
