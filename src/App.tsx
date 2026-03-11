@@ -85,17 +85,17 @@ const projects: Project[] = [
   {
     title: 'Smol Suji Website',
     description:
-      'A conversion-focused storefront with dynamic merchandising, reusable UI primitives, and SEO optimization.',
-    stack: ['Vite', 'React', 'TypeScript', 'REST API'],
+      'Smol Suji is a minimal, full-stack e-commerce platform for "cute things in smol packages." It offers a delightful shopping experience with real-time cart updates and secure checkout, alongside a robust admin panel for managing inventory, tracking orders, and handling automated invoicing.',
+    stack: ['Vite', 'Next.js', 'Tailwind CSS', 'Supabase', 'Typescript'],
     sourceUrl: 'https://github.com/jaiacedera/SmolSuji-Website',
     liveUrl: '#',
   },
   {
-    title: 'Portfolio CMS Starter',
+    title: 'CREO MechaLab X',
     description:
-      'A starter platform for creators to manage projects, case studies, and media through a simple dashboard.',
-    stack: ['React', 'Node', 'PostgreSQL', 'Cloud Storage'],
-    sourceUrl: 'https://github.com/jaiacedera/Portfolio-CMS-Starter',
+      'CREO MechaLab X is an interactive web platform that compresses the 20-day Mechatronics NC II training into a structured, one-day digital experience. It features a trainee portal for wiring simulations and module viewing, alongside a robust admin system for cohort management and progress tracking.',
+    stack: ['React.js', 'Node', 'MySQL', 'Konva JS', 'Docker', 'Tailwind CSS', 'TypeScript'],
+    sourceUrl: 'https://github.com/Qualestrom/creotec-mechalab-x',
     liveUrl: '#',
   },
 ]
