@@ -760,9 +760,9 @@ function App() {
         <section id="certifications" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Certifications" title="Professional credentials" />
 
-          <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-slate-50/50 dark:border-slate-800/70 dark:bg-slate-900/30 px-3 py-8 sm:px-6">
+          <div className="relative overflow-hidden pt-2 pb-8 sm:hidden">
             <div
-              className="relative h-80 sm:h-85"
+              className="relative h-80"
               onTouchStart={(e) => { certificationTouchStartX.current = e.touches[0].clientX }}
               onTouchEnd={(e) => {
                 if (certificationTouchStartX.current === null) return
@@ -833,6 +833,20 @@ function App() {
                 />
               ))}
             </div>
+          </div>
+
+          <div className="hidden gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3">
+            {certifications.map((certification) => (
+              <article
+                key={`${certification.title}-${certification.credentialId}`}
+                className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              >
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{certification.year}</p>
+                <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{certification.title}</h3>
+                <p className="mt-2 text-sm text-cyan-700 dark:text-cyan-300">{certification.issuer}</p>
+                <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Credential ID: {certification.credentialId}</p>
+              </article>
+            ))}
           </div>
         </section>
 
