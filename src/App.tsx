@@ -75,19 +75,19 @@ const experiences: ExperienceItem[] = [
 
 const projects: Project[] = [
   {
-    title: 'Analytics Command Center',
+    title: 'Buso-Buso Emergency Operations Center App',
     description:
-      'A data-rich admin portal with role-based views, charting modules, and advanced table interactions.',
-    stack: ['React', 'TypeScript', 'Tailwind', 'TanStack Query'],
-    sourceUrl: '#',
+      'Buso-Buso Mobile App is a mobile Emergency Operations Center (EOC) app for Barangay Buso-Buso residents. It helps residents register their profile, submit distress reports, track report status, and view community alerts in real time.',
+    stack: ['React Native', 'TypeScript', 'Tailwind', 'Expo', 'Firebase Firestore', 'gpt-4.1'],
+    sourceUrl: 'https://github.com/jaiacedera/BusoBusoMobileApp',
     liveUrl: '#',
   },
   {
-    title: 'E-Commerce Experience Platform',
+    title: 'Smol Suji Website',
     description:
       'A conversion-focused storefront with dynamic merchandising, reusable UI primitives, and SEO optimization.',
     stack: ['Vite', 'React', 'TypeScript', 'REST API'],
-    sourceUrl: '#',
+    sourceUrl: 'https://github.com/jaiacedera/SmolSuji-Website',
     liveUrl: '#',
   },
   {
@@ -95,7 +95,7 @@ const projects: Project[] = [
     description:
       'A starter platform for creators to manage projects, case studies, and media through a simple dashboard.',
     stack: ['React', 'Node', 'PostgreSQL', 'Cloud Storage'],
-    sourceUrl: '#',
+    sourceUrl: 'https://github.com/jaiacedera/Portfolio-CMS-Starter',
     liveUrl: '#',
   },
 ]
