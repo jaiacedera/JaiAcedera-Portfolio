@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import Stack from './components/Stack';
+import React, { useState, useEffect } from 'react'
 import ProfileCard from './components/ProfileCard';
-import { PhotoCardSwiper } from './PhotoCardSwiper';
 import type { FormEvent } from 'react'
 
 interface EducationItem {
@@ -261,34 +261,52 @@ function App() {
     'UI/UX ',
     'FullStack Developer',
     'Quality Assurance Engineer',
-  ], []);
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [displayedRole, setDisplayedRole] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingSpeed, setTypingSpeed] = useState(120);
+  ], [])
+  const [roleIndex, setRoleIndex] = useState(0)
+  const [displayedRole, setDisplayedRole] = useState('')
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [typingSpeed, setTypingSpeed] = useState(120)
+
+  const aboutStackCards = React.useMemo(
+    () =>
+      [
+        'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format',
+        'https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format',
+        'https://images.unsplash.com/photo-1452626212852-811d58933cae?q=80&w=500&auto=format',
+        'https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format',
+      ].map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt={`card-${i + 1}`}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+      )),
+    []
+  )
 
   // Typing effect
-  React.useEffect(() => {
-    const currentRole = roles[roleIndex];
-    let timer: ReturnType<typeof setTimeout>;
+  useEffect(() => {
+    const currentRole = roles[roleIndex]
+    let timer: ReturnType<typeof setTimeout>
     if (!isDeleting && displayedRole.length < currentRole.length) {
-      setTypingSpeed(120);
+      setTypingSpeed(120)
       timer = setTimeout(() => {
-        setDisplayedRole(currentRole.slice(0, displayedRole.length + 1));
-      }, typingSpeed);
+        setDisplayedRole(currentRole.slice(0, displayedRole.length + 1))
+      }, typingSpeed)
     } else if (isDeleting && displayedRole.length > 0) {
-      setTypingSpeed(60);
+      setTypingSpeed(60)
       timer = setTimeout(() => {
-        setDisplayedRole(currentRole.slice(0, displayedRole.length - 1));
-      }, typingSpeed);
+        setDisplayedRole(currentRole.slice(0, displayedRole.length - 1))
+      }, typingSpeed)
     } else if (!isDeleting && displayedRole.length === currentRole.length) {
-      timer = setTimeout(() => setIsDeleting(true), 1000);
+      timer = setTimeout(() => setIsDeleting(true), 1000)
     } else if (isDeleting && displayedRole.length === 0) {
-      setIsDeleting(false);
-      setRoleIndex((prev) => (prev + 1) % roles.length);
+      setIsDeleting(false)
+      setRoleIndex((prev) => (prev + 1) % roles.length)
     }
-    return () => clearTimeout(timer);
-  }, [displayedRole, isDeleting, roleIndex, roles, typingSpeed]);
+    return () => clearTimeout(timer)
+  }, [displayedRole, isDeleting, roleIndex, roles, typingSpeed])
 
   return (
     <div
@@ -307,31 +325,21 @@ function App() {
             : 'border-slate-300 bg-slate-100/90',
         ].join(' ')}
       >
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto] items-center px-4 py-4 sm:px-6 md:grid-cols-[1fr_auto_1fr] lg:px-10">
-          <a href="#hero" className="flex items-center gap-3">
-            <img
-              src="/profile-photo.jpg"
-              alt="Jai Acedera avatar"
-              className="h-9 w-9 rounded-full border border-cyan-300/60 object-cover"
-            />
-          </a>
-          <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-            <a href="#about" className="transition hover:text-cyan-300">
-              About
-            </a>
-            <a href="#education" className="transition hover:text-cyan-300">
-              Education
-            </a>
-            <a href="#projects" className="transition hover:text-cyan-300">
-              Projects
-            </a>
-            <a href="#hardware-projects" className="transition hover:text-cyan-300">
-              Hardware
-            </a>
-            <a href="#contact" className="transition hover:text-cyan-300">
-              Contact
-            </a>
-          </nav>
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-[1fr_auto] items-center px-4 py-4 sm:px-6 md:grid-cols-[1fr_auto_1fr] lg:px-10">
+        <a href="#hero" className="flex items-center gap-3">
+          <img
+            src="/profile-photo.jpg"
+            alt="Jai Acedera avatar"
+            className="h-9 w-9 rounded-full border border-cyan-300/60 object-cover"
+          />
+        </a>
+        <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
+          <a href="#about" className="transition hover:text-cyan-300">About</a>
+          <a href="#education" className="transition hover:text-cyan-300">Education</a>
+          <a href="#projects" className="transition hover:text-cyan-300">Projects</a>
+          <a href="#hardware-projects" className="transition hover:text-cyan-300">Hardware</a>
+          <a href="#contact" className="transition hover:text-cyan-300">Contact</a>
+        </nav>
           <div className="ml-auto flex items-center gap-2 md:justify-self-end">
             <a
               href="#"
@@ -516,7 +524,18 @@ function App() {
               </p>
             </div>
             <div className="flex justify-center">
-              <PhotoCardSwiper />
+              {/* Stack usage example with custom images and props */}
+              <div style={{ width: 208, height: 208 }}>
+                <Stack
+                  randomRotation={false}
+                  sensitivity={200}
+                  sendToBackOnClick={true}
+                  cards={aboutStackCards}
+                  autoplay={false}
+                  autoplayDelay={3000}
+                  pauseOnHover={false}
+                />
+              </div>
             </div>
           </div>
         </section>
