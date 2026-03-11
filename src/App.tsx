@@ -1,6 +1,8 @@
 import Stack from './components/Stack';
 import React, { useState, useEffect, useRef } from 'react'
 import ProfileCard from './components/ProfileCard';
+import { AnimatePresence, motion } from 'motion/react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { FormEvent } from 'react'
 
 interface EducationItem {
@@ -321,7 +323,80 @@ function App() {
       ? []
       : Array.from({ length: Math.min(3, hardwareProjects.length) }, (_, offset) => hardwareProjects[(desktopHardwareStartIndex + offset) % hardwareProjects.length])
 
+  const [activeCertificationIndex, setActiveCertificationIndex] = useState(0)
+  const [certificationDirection, setCertificationDirection] = useState(0)
+
+  const paginateCertification = (newDirection: number) => {
+    if (certifications.length === 0) return
+    setCertificationDirection(newDirection)
+    setActiveCertificationIndex((prev) => (prev + newDirection + certifications.length) % certifications.length)
+  }
+
+  const selectCertification = (index: number) => {
+    if (index === activeCertificationIndex) return
+    setCertificationDirection(index > activeCertificationIndex ? 1 : -1)
+    setActiveCertificationIndex(index)
+  }
+
+  const getCertificationPosition = (index: number) => {
+    const total = certifications.length
+    if (!total) return 'hidden'
+    const diff = (index - activeCertificationIndex + total) % total
+    if (diff === 0) return 'center'
+    if (diff === 1) return 'right'
+    if (diff === total - 1) return 'left'
+    return 'hidden'
+  }
+
+  const getCertificationVariant = (position: string) => {
+    const transition = { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
+
+    switch (position) {
+      case 'center':
+        return {
+          zIndex: 10,
+          opacity: 1,
+          scale: 1,
+          x: 0,
+          filter: 'grayscale(0%)',
+          pointerEvents: 'auto',
+          transition,
+        }
+      case 'right':
+        return {
+          zIndex: 5,
+          opacity: 0.5,
+          scale: 0.9,
+          x: 180,
+          filter: 'grayscale(100%)',
+          pointerEvents: 'auto',
+          transition,
+        }
+      case 'left':
+        return {
+          zIndex: 5,
+          opacity: 0.5,
+          scale: 0.9,
+          x: -180,
+          filter: 'grayscale(100%)',
+          pointerEvents: 'auto',
+          transition,
+        }
+      default:
+        return {
+          zIndex: 0,
+          opacity: 0,
+          scale: 0.82,
+          x: certificationDirection >= 0 ? 260 : -260,
+          pointerEvents: 'none',
+          filter: 'grayscale(100%)',
+          transition,
+        }
+    }
+  }
+
   const projectTouchStartX = useRef<number | null>(null)
+  const certificationTouchStartX = useRef<number | null>(null)
   const hardwareTouchStartX = useRef<number | null>(null)
 
   const aboutStackWidth = 250
@@ -494,7 +569,7 @@ function App() {
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Projects
+                Software Projects
               </a>
               <a
                 href="#hardware-projects"
@@ -685,18 +760,79 @@ function App() {
         <section id="certifications" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Certifications" title="Professional credentials" />
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {certifications.map((certification) => (
-              <article
-                key={`${certification.title}-${certification.credentialId}`}
-                className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+          <div className="relative overflow-hidden rounded-2xl border border-slate-200/70 bg-slate-50/50 dark:border-slate-800/70 dark:bg-slate-900/30 px-3 py-8 sm:px-6">
+            <div
+              className="relative h-80 sm:h-85"
+              onTouchStart={(e) => { certificationTouchStartX.current = e.touches[0].clientX }}
+              onTouchEnd={(e) => {
+                if (certificationTouchStartX.current === null) return
+                const diff = certificationTouchStartX.current - e.changedTouches[0].clientX
+                if (Math.abs(diff) > 40) {
+                  if (diff > 0) paginateCertification(1)
+                  else paginateCertification(-1)
+                }
+                certificationTouchStartX.current = null
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => paginateCertification(-1)}
+                className="absolute left-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Previous certification"
               >
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{certification.year}</p>
-                  <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{certification.title}</h3>
-                <p className="mt-2 text-sm text-cyan-700 dark:text-cyan-300">{certification.issuer}</p>
-                  <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Credential ID: {certification.credentialId}</p>
-              </article>
-            ))}
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => paginateCertification(1)}
+                className="absolute right-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                aria-label="Next certification"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+
+              <div className="relative h-full">
+                <AnimatePresence initial={false} custom={certificationDirection}>
+                  {certifications.map((certification, index) => {
+                    const position = getCertificationPosition(index)
+                    if (position === 'hidden') return null
+
+                    return (
+                      <motion.article
+                        key={`${certification.title}-${certification.credentialId}`}
+                        initial={getCertificationVariant('hidden')}
+                        animate={getCertificationVariant(position)}
+                        exit={getCertificationVariant('hidden')}
+                        className="absolute left-1/2 top-1/2 w-[min(82vw,300px)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/80 p-5 shadow-lg"
+                      >
+                        <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{certification.year}</p>
+                        <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{certification.title}</h3>
+                        <p className="mt-2 text-sm text-cyan-700 dark:text-cyan-300">{certification.issuer}</p>
+                        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Credential ID: {certification.credentialId}</p>
+                      </motion.article>
+                    )
+                  })}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className="mt-3 flex justify-center gap-2">
+              {certifications.map((certification, index) => (
+                <button
+                  key={certification.credentialId}
+                  type="button"
+                  onClick={() => selectCertification(index)}
+                  className={[
+                    'h-2.5 w-2.5 rounded-full transition',
+                    index === activeCertificationIndex
+                      ? 'bg-cyan-600 dark:bg-cyan-300'
+                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                  ].join(' ')}
+                  aria-label={`Go to certification ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -730,7 +866,7 @@ function App() {
         </section>
 
         <section id="projects" className="py-14 sm:py-20">
-          <SectionHeading eyebrow="Projects" title="Selected work" />
+          <SectionHeading eyebrow="Projects" title="Portfolio Highlights" />
 
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
