@@ -386,7 +386,7 @@ function App() {
   return (
     <div
       className={[
-        'min-h-screen transition-colors duration-300',
+        'min-h-screen overflow-x-hidden transition-colors duration-300',
         isDarkMode
           ? 'bg-slate-950 text-slate-200'
           : 'bg-slate-100 text-slate-800',
