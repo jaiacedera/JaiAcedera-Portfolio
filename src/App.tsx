@@ -274,13 +274,22 @@ function App() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [typingSpeed, setTypingSpeed] = useState(120)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0)
+  const [projectDirection, setProjectDirection] = useState(0)
 
   const goToPreviousProject = () => {
+    setProjectDirection(-1)
     setActiveProjectIndex((prev) => (prev - 1 + projects.length) % projects.length)
   }
 
   const goToNextProject = () => {
+    setProjectDirection(1)
     setActiveProjectIndex((prev) => (prev + 1) % projects.length)
+  }
+
+  const selectProjectIndex = (index: number) => {
+    if (index === activeProjectIndex) return
+    setProjectDirection(index > activeProjectIndex ? 1 : -1)
+    setActiveProjectIndex(index)
   }
 
   const [desktopProjectStartIndex, setDesktopProjectStartIndex] = useState(0)
@@ -299,13 +308,22 @@ function App() {
       : Array.from({ length: Math.min(3, projects.length) }, (_, offset) => projects[(desktopProjectStartIndex + offset) % projects.length])
 
   const [activeHardwareIndex, setActiveHardwareIndex] = useState(0)
+  const [hardwareDirection, setHardwareDirection] = useState(0)
 
   const goToPreviousHardware = () => {
+    setHardwareDirection(-1)
     setActiveHardwareIndex((prev) => (prev - 1 + hardwareProjects.length) % hardwareProjects.length)
   }
 
   const goToNextHardware = () => {
+    setHardwareDirection(1)
     setActiveHardwareIndex((prev) => (prev + 1) % hardwareProjects.length)
+  }
+
+  const selectHardwareIndex = (index: number) => {
+    if (index === activeHardwareIndex) return
+    setHardwareDirection(index > activeHardwareIndex ? 1 : -1)
+    setActiveHardwareIndex(index)
   }
 
   const [desktopHardwareStartIndex, setDesktopHardwareStartIndex] = useState(0)
@@ -394,6 +412,62 @@ function App() {
         }
     }
   }
+
+    const getCarouselPosition = (index: number, activeIndex: number, total: number) => {
+      if (!total) return 'hidden'
+      const diff = (index - activeIndex + total) % total
+      if (diff === 0) return 'center'
+      if (diff === 1) return 'right'
+      if (diff === total - 1) return 'left'
+      return 'hidden'
+    }
+
+    const getCarouselVariant = (position: string, direction: number) => {
+      const transition = { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] as [number, number, number, number] }
+
+      switch (position) {
+        case 'center':
+          return {
+            zIndex: 10,
+            opacity: 1,
+            scale: 1,
+            x: 0,
+            filter: 'grayscale(0%)',
+            pointerEvents: 'auto',
+            transition,
+          }
+        case 'right':
+          return {
+            zIndex: 5,
+            opacity: 0.5,
+            scale: 0.9,
+            x: 180,
+            filter: 'grayscale(100%)',
+            pointerEvents: 'auto',
+            transition,
+          }
+        case 'left':
+          return {
+            zIndex: 5,
+            opacity: 0.5,
+            scale: 0.9,
+            x: -180,
+            filter: 'grayscale(100%)',
+            pointerEvents: 'auto',
+            transition,
+          }
+        default:
+          return {
+            zIndex: 0,
+            opacity: 0,
+            scale: 0.82,
+            x: direction >= 0 ? 260 : -260,
+            pointerEvents: 'none',
+            filter: 'grayscale(100%)',
+            transition,
+          }
+      }
+    }
 
   const projectTouchStartX = useRef<number | null>(null)
   const certificationTouchStartX = useRef<number | null>(null)
@@ -884,75 +958,97 @@ function App() {
 
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
-            <article
-              className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+            <div
+              className="relative h-105"
               onTouchStart={(e) => { projectTouchStartX.current = e.touches[0].clientX }}
               onTouchEnd={(e) => {
                 if (projectTouchStartX.current === null) return
                 const diff = projectTouchStartX.current - e.changedTouches[0].clientX
-                if (Math.abs(diff) > 40) { if (diff > 0) goToNextProject(); else goToPreviousProject() }
+                if (Math.abs(diff) > 40) {
+                  if (diff > 0) goToNextProject()
+                  else goToPreviousProject()
+                }
                 projectTouchStartX.current = null
               }}
             >
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{projects[activeProjectIndex].title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{projects[activeProjectIndex].description}</p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {projects[activeProjectIndex].stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-6 flex items-center gap-4 text-sm">
-                <a href={projects[activeProjectIndex].sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                  Source
-                </a>
-                <a href={projects[activeProjectIndex].liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
-                  Live Demo
-                </a>
-              </div>
-            </article>
-
-            <div className="flex items-center justify-between">
               <button
                 type="button"
                 onClick={goToPreviousProject}
-                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                className="absolute left-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
                 aria-label="Previous project"
               >
-                &lt;
+                <ChevronLeft className="h-4 w-4" />
               </button>
-
-              <div className="flex justify-center gap-2">
-                {projects.map((project, index) => (
-                  <button
-                    key={project.title}
-                    type="button"
-                    onClick={() => setActiveProjectIndex(index)}
-                    className={[
-                      'h-2.5 w-2.5 rounded-full transition',
-                      index === activeProjectIndex
-                        ? 'bg-cyan-600 dark:bg-cyan-300'
-                        : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
-                    ].join(' ')}
-                    aria-label={`Go to project ${index + 1}`}
-                  />
-                ))}
-              </div>
 
               <button
                 type="button"
                 onClick={goToNextProject}
-                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                className="absolute right-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
                 aria-label="Next project"
               >
-                &gt;
+                <ChevronRight className="h-4 w-4" />
               </button>
+
+              <div className="relative h-full">
+                <AnimatePresence initial={false} custom={projectDirection}>
+                  {projects.map((project, index) => {
+                    const position = getCarouselPosition(index, activeProjectIndex, projects.length)
+                    if (position === 'hidden') return null
+
+                    return (
+                      <motion.article
+                        key={`${project.title}-${index}`}
+                        initial={getCarouselVariant('hidden', projectDirection)}
+                        animate={getCarouselVariant(position, projectDirection)}
+                        exit={getCarouselVariant('hidden', projectDirection)}
+                        className="absolute left-1/2 top-1/2 flex h-full w-[min(82vw,320px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
+                      >
+                        <div className="flex h-full flex-col">
+                          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
+
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {project.stack.map((tech) => (
+                              <span
+                                key={tech}
+                                className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+
+                          <div className="mt-auto pt-6 flex items-center gap-4 text-sm">
+                            <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                              Source
+                            </a>
+                            <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
+                              Live Demo
+                            </a>
+                          </div>
+                        </div>
+                      </motion.article>
+                    )
+                  })}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-2">
+              {projects.map((project, index) => (
+                <button
+                  key={project.title}
+                  type="button"
+                  onClick={() => selectProjectIndex(index)}
+                  className={[
+                    'h-2.5 w-2.5 rounded-full transition',
+                    index === activeProjectIndex
+                      ? 'bg-cyan-600 dark:bg-cyan-300'
+                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                  ].join(' ')}
+                  aria-label={`Go to project ${index + 1}`}
+                />
+              ))}
             </div>
           </div>
 
@@ -1015,67 +1111,88 @@ function App() {
 
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
-            <article
-              className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+            <div
+              className="relative h-105"
               onTouchStart={(e) => { hardwareTouchStartX.current = e.touches[0].clientX }}
               onTouchEnd={(e) => {
                 if (hardwareTouchStartX.current === null) return
                 const diff = hardwareTouchStartX.current - e.changedTouches[0].clientX
-                if (Math.abs(diff) > 40) { if (diff > 0) goToNextHardware(); else goToPreviousHardware() }
+                if (Math.abs(diff) > 40) {
+                  if (diff > 0) goToNextHardware()
+                  else goToPreviousHardware()
+                }
                 hardwareTouchStartX.current = null
               }}
             >
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{hardwareProjects[activeHardwareIndex].title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{hardwareProjects[activeHardwareIndex].description}</p>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                {hardwareProjects[activeHardwareIndex].stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-
-            </article>
-
-            <div className="flex items-center justify-between">
               <button
                 type="button"
                 onClick={goToPreviousHardware}
-                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                className="absolute left-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
                 aria-label="Previous hardware project"
               >
-                &lt;
+                <ChevronLeft className="h-4 w-4" />
               </button>
-
-              <div className="flex justify-center gap-2">
-                {hardwareProjects.map((project, index) => (
-                  <button
-                    key={project.title}
-                    type="button"
-                    onClick={() => setActiveHardwareIndex(index)}
-                    className={[
-                      'h-2.5 w-2.5 rounded-full transition',
-                      index === activeHardwareIndex
-                        ? 'bg-cyan-600 dark:bg-cyan-300'
-                        : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
-                    ].join(' ')}
-                    aria-label={`Go to project ${index + 1}`}
-                  />
-                ))}
-              </div>
 
               <button
                 type="button"
                 onClick={goToNextHardware}
-                className="rounded-full border border-slate-300/70 px-2.5 py-1 text-sm text-slate-500 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/70 dark:text-slate-300 dark:hover:text-cyan-300"
+                className="absolute right-1 top-1/2 z-20 -translate-y-1/2 rounded-full border border-slate-300/80 bg-white/80 p-2 text-slate-600 backdrop-blur transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700/80 dark:bg-slate-900/70 dark:text-slate-300 dark:hover:text-cyan-300"
                 aria-label="Next hardware project"
               >
-                &gt;
+                <ChevronRight className="h-4 w-4" />
               </button>
+
+              <div className="relative h-full">
+                <AnimatePresence initial={false} custom={hardwareDirection}>
+                  {hardwareProjects.map((project, index) => {
+                    const position = getCarouselPosition(index, activeHardwareIndex, hardwareProjects.length)
+                    if (position === 'hidden') return null
+
+                    return (
+                      <motion.article
+                        key={`${project.title}-${index}`}
+                        initial={getCarouselVariant('hidden', hardwareDirection)}
+                        animate={getCarouselVariant(position, hardwareDirection)}
+                        exit={getCarouselVariant('hidden', hardwareDirection)}
+                        className="absolute left-1/2 top-1/2 flex h-full w-[min(82vw,320px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
+                      >
+                        <div className="flex h-full flex-col">
+                          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                          <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
+
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {project.stack.map((tech) => (
+                              <span
+                                key={tech}
+                                className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.article>
+                    )
+                  })}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className="flex justify-center gap-2">
+              {hardwareProjects.map((project, index) => (
+                <button
+                  key={project.title}
+                  type="button"
+                  onClick={() => selectHardwareIndex(index)}
+                  className={[
+                    'h-2.5 w-2.5 rounded-full transition',
+                    index === activeHardwareIndex
+                      ? 'bg-cyan-600 dark:bg-cyan-300'
+                      : 'bg-slate-300 hover:bg-cyan-400/70 dark:bg-slate-700 dark:hover:bg-cyan-300/60',
+                  ].join(' ')}
+                  aria-label={`Go to project ${index + 1}`}
+                />
+              ))}
             </div>
           </div>
 
