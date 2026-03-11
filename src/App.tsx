@@ -202,10 +202,10 @@ const certifications: Certification[] = [
 function SectionHeading({ title, eyebrow }: { title: string; eyebrow: string }) {
   return (
     <div className="mb-10">
-      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-600 dark:text-cyan-300/80">
         {eyebrow}
       </p>
-      <h2 className="text-2xl font-semibold text-slate-100 sm:text-3xl">{title}</h2>
+      <h2 className="text-2xl font-semibold text-slate-900 dark:text-slate-100 sm:text-3xl">{title}</h2>
     </div>
   )
 }
@@ -218,8 +218,13 @@ function App() {
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 
-  const [isDarkMode] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDarkMode)
+  }, [isDarkMode])
+
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
   const [submitMessage, setSubmitMessage] = useState('')
 
@@ -343,12 +348,12 @@ function App() {
             className="h-9 w-9 rounded-full border border-cyan-300/60 object-cover"
           />
         </a>
-        <nav className="hidden items-center gap-8 text-sm text-slate-300 md:flex">
-          <a href="#about" className="transition hover:text-cyan-300">About</a>
-          <a href="#education" className="transition hover:text-cyan-300">Education</a>
-          <a href="#projects" className="transition hover:text-cyan-300">Projects</a>
-          <a href="#hardware-projects" className="transition hover:text-cyan-300">Hardware</a>
-          <a href="#contact" className="transition hover:text-cyan-300">Contact</a>
+        <nav className="hidden items-center gap-8 text-sm text-slate-600 dark:text-slate-300 md:flex">
+          <a href="#about" className="transition hover:text-cyan-700 dark:hover:text-cyan-300">About</a>
+          <a href="#education" className="transition hover:text-cyan-700 dark:hover:text-cyan-300">Education</a>
+          <a href="#projects" className="transition hover:text-cyan-700 dark:hover:text-cyan-300">Projects</a>
+          <a href="#hardware-projects" className="transition hover:text-cyan-700 dark:hover:text-cyan-300">Hardware</a>
+          <a href="#contact" className="transition hover:text-cyan-700 dark:hover:text-cyan-300">Contact</a>
         </nav>
           <div className="ml-auto flex items-center gap-2 md:justify-self-end">
             <a
@@ -360,7 +365,7 @@ function App() {
                 handleExternalRedirect(githubUrl)
               }}
               aria-label="GitHub"
-              className="hidden rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300 md:inline-flex"
+              className="hidden rounded-md border border-slate-300 p-2 text-slate-600 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-300 md:inline-flex"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                 <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.45-1.15-1.12-1.45-1.12-1.45-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.11-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.4 9.4 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.37.21 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.35 4.69-4.58 4.94.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
@@ -375,7 +380,7 @@ function App() {
                 handleExternalRedirect(linkedInUrl)
               }}
               aria-label="LinkedIn"
-              className="hidden rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300 md:inline-flex"
+              className="hidden rounded-md border border-slate-300 p-2 text-slate-600 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-300 md:inline-flex"
             >
               <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                 <path d="M6.94 8.5H3.56V20h3.38V8.5Zm.22-3.56a1.95 1.95 0 1 0-3.9 0 1.95 1.95 0 0 0 3.9 0ZM20 13.41c0-3.02-1.61-5.06-4.38-5.06-2.02 0-2.92 1.1-3.43 1.88V8.5H8.81V20h3.38v-5.69c0-1.5.29-2.96 2.14-2.96 1.82 0 1.85 1.7 1.85 3.06V20h3.37v-6.59Z" />
@@ -383,8 +388,24 @@ function App() {
             </a>
             <button
               type="button"
+              onClick={() => setIsDarkMode(v => !v)}
+              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="rounded-md border border-slate-300 p-2 text-slate-600 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-300"
+            >
+              {isDarkMode ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
+                  <path d="M12 3a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1Zm9-7a1 1 0 0 1-1 1h-1a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1ZM4 12a1 1 0 0 1-1 1H2a1 1 0 1 1 0-2h1a1 1 0 0 1 1 1Zm14.95-6.95a1 1 0 0 1 0 1.414l-.707.707a1 1 0 0 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0ZM6.757 17.243a1 1 0 0 1 0 1.414l-.707.707a1 1 0 0 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0ZM18.95 18.95a1 1 0 0 1-1.414 0l-.707-.707a1 1 0 0 1 1.414-1.414l.707.707a1 1 0 0 1 0 1.414ZM6.757 6.757a1 1 0 0 1-1.414 0l-.707-.707A1 1 0 0 1 6.05 4.636l.707.707a1 1 0 0 1 0 1.414ZM12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7Z" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
+                  <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1Z" />
+                </svg>
+              )}
+            </button>
+            <button
+              type="button"
               onClick={() => setIsMenuOpen((value) => !value)}
-              className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-medium text-slate-200 transition hover:border-cyan-300 hover:text-cyan-300 md:hidden"
+              className="rounded-lg border border-slate-300 px-3 py-2 text-xs font-medium text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-200 dark:hover:text-cyan-300 md:hidden"
               aria-expanded={isMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -403,7 +424,7 @@ function App() {
               <a
                 href="#about"
                 className={[
-                  'transition hover:text-cyan-300',
+                  'transition hover:text-cyan-700 dark:hover:text-cyan-300',
                   isDarkMode ? 'text-slate-300' : 'text-slate-700',
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
@@ -413,7 +434,7 @@ function App() {
               <a
                 href="#education"
                 className={[
-                  'transition hover:text-cyan-300',
+                  'transition hover:text-cyan-700 dark:hover:text-cyan-300',
                   isDarkMode ? 'text-slate-300' : 'text-slate-700',
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
@@ -423,7 +444,7 @@ function App() {
               <a
                 href="#projects"
                 className={[
-                  'transition hover:text-cyan-300',
+                  'transition hover:text-cyan-700 dark:hover:text-cyan-300',
                   isDarkMode ? 'text-slate-300' : 'text-slate-700',
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
@@ -433,7 +454,7 @@ function App() {
               <a
                 href="#hardware-projects"
                 className={[
-                  'transition hover:text-cyan-300',
+                  'transition hover:text-cyan-700 dark:hover:text-cyan-300',
                   isDarkMode ? 'text-slate-300' : 'text-slate-700',
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
@@ -443,7 +464,7 @@ function App() {
               <a
                 href="#contact"
                 className={[
-                  'transition hover:text-cyan-300',
+                  'transition hover:text-cyan-700 dark:hover:text-cyan-300',
                   isDarkMode ? 'text-slate-300' : 'text-slate-700',
                 ].join(' ')}
                 onClick={() => setIsMenuOpen(false)}
@@ -460,7 +481,7 @@ function App() {
                     handleExternalRedirect(githubUrl)
                   }}
                   aria-label="GitHub"
-                  className="inline-flex rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300"
+                  className="inline-flex rounded-md border border-slate-300 p-2 text-slate-600 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-300"
                 >
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                     <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.61-3.37-1.18-3.37-1.18-.45-1.15-1.12-1.45-1.12-1.45-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.11-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.4 9.4 0 0 1 5 0c1.9-1.29 2.75-1.02 2.75-1.02.55 1.37.21 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.85-2.35 4.69-4.58 4.94.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z" />
@@ -475,7 +496,7 @@ function App() {
                     handleExternalRedirect(linkedInUrl)
                   }}
                   aria-label="LinkedIn"
-                  className="inline-flex rounded-md border border-slate-700 p-2 text-slate-300 transition hover:border-cyan-300 hover:text-cyan-300"
+                  className="inline-flex rounded-md border border-slate-300 p-2 text-slate-600 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-300"
                 >
                   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4 w-4 fill-current">
                     <path d="M6.94 8.5H3.56V20h3.38V8.5Zm.22-3.56a1.95 1.95 0 1 0-3.9 0 1.95 1.95 0 0 0 3.9 0ZM20 13.41c0-3.02-1.61-5.06-4.38-5.06-2.02 0-2.92 1.1-3.43 1.88V8.5H8.81V20h3.38v-5.69c0-1.5.29-2.96 2.14-2.96 1.82 0 1.85 1.7 1.85 3.06V20h3.37v-6.59Z" />
@@ -491,15 +512,15 @@ function App() {
         <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
           <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
             <div>
-              <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-300/80">
+              <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
                 Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
               </p>
 
-              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-100 sm:text-5xl lg:text-6xl">
+              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
                 Designing and building performant digital products with precision.
               </h1>
 
-              <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-300 sm:mt-8 sm:text-lg">
+              <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300 sm:mt-8 sm:text-lg">
                 I craft polished web experiences that prioritize maintainability, speed, and clean architecture. 
                 As a Computer Engineering graduate, I specialize in developing efficient software solutions that 
                 bridge the gap between high-level web development and real-world hardware integration.
@@ -514,7 +535,7 @@ function App() {
                 </a>
                 <a
                   href="#contact"
-                  className="w-full rounded-lg border border-slate-700 px-6 py-3 text-center text-sm font-semibold text-slate-100 transition hover:border-cyan-300 hover:text-cyan-300 sm:w-auto"
+                  className="w-full rounded-lg border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-100 dark:hover:text-cyan-300 sm:w-auto"
                 >
                   Let&apos;s Connect
                 </a>
@@ -546,7 +567,7 @@ function App() {
           <SectionHeading eyebrow="About Me" title="Building products with clarity and intent" />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div className="space-y-6 text-base leading-relaxed text-slate-300">
+            <div className="space-y-6 text-base leading-relaxed text-slate-600 dark:text-slate-300">
               <p>
                 I approach frontend development as both an engineering and design discipline. Every screen should
                 communicate clearly, perform quickly, and remain maintainable as products evolve.
@@ -577,14 +598,14 @@ function App() {
         <section id="education" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Education" title="Academic and professional development" />
 
-          <div className="relative space-y-8 border-l border-slate-800 pl-6">
+          <div className="relative space-y-8 border-l border-slate-200 dark:border-slate-800 pl-6">
             {education.map((item) => (
               <article key={`${item.degree}-${item.institution}`} className="relative">
                 <span className="absolute -left-7.75 top-1 h-3 w-3 rounded-full bg-cyan-300" />
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{item.period}</p>
-                <h3 className="mt-2 text-xl font-semibold text-slate-100">{item.degree}</h3>
-                <p className="mt-1 text-sm text-cyan-300">{item.institution}</p>
-                <p className="mt-3 max-w-3xl text-slate-300">{item.details}</p>
+                <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{item.period}</p>
+                <h3 className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">{item.degree}</h3>
+                <p className="mt-1 text-sm text-cyan-700 dark:text-cyan-300">{item.institution}</p>
+                <p className="mt-3 max-w-3xl text-slate-600 dark:text-slate-300">{item.details}</p>
               </article>
             ))}
           </div>
@@ -597,13 +618,13 @@ function App() {
             {experiences.map((item) => (
               <article
                 key={`${item.role}-${item.company}`}
-                className="rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{item.period}</p>
-                <h3 className="mt-2 text-xl font-semibold text-slate-100">{item.role}</h3>
-                <p className="mt-1 text-sm font-medium text-cyan-300">{item.company}</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{item.period}</p>
+                  <h3 className="mt-2 text-xl font-semibold text-slate-900 dark:text-slate-100">{item.role}</h3>
+                <p className="mt-1 text-sm font-medium text-cyan-700 dark:text-cyan-300">{item.company}</p>
 
-                <ul className="mt-4 space-y-2 text-sm leading-relaxed text-slate-300">
+                  <ul className="mt-4 space-y-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                   {item.achievements.map((achievement) => (
                     <li key={achievement} className="flex gap-2">
                       <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-300" />
@@ -623,12 +644,12 @@ function App() {
             {certifications.map((certification) => (
               <article
                 key={`${certification.title}-${certification.credentialId}`}
-                className="rounded-xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                <p className="text-xs uppercase tracking-[0.18em] text-slate-400">{certification.year}</p>
-                <h3 className="mt-2 text-base font-semibold text-slate-100">{certification.title}</h3>
-                <p className="mt-2 text-sm text-cyan-300">{certification.issuer}</p>
-                <p className="mt-3 text-xs text-slate-400">Credential ID: {certification.credentialId}</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">{certification.year}</p>
+                  <h3 className="mt-2 text-base font-semibold text-slate-900 dark:text-slate-100">{certification.title}</h3>
+                <p className="mt-2 text-sm text-cyan-700 dark:text-cyan-300">{certification.issuer}</p>
+                  <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Credential ID: {certification.credentialId}</p>
               </article>
             ))}
           </div>
@@ -641,18 +662,18 @@ function App() {
             {techStackGroups.map((group) => (
               <article
                 key={group.category}
-                className="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="relative overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
                 <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-cyan-400/10 blur-2xl" />
 
-                <h3 className="text-lg font-semibold text-slate-100">{group.category}</h3>
-                <p className="mt-2 text-sm text-slate-300">{group.focus}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{group.category}</h3>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{group.focus}</p>
 
                 <ul className="mt-5 flex flex-wrap gap-2.5">
                   {group.items.map((item) => (
                     <li
                       key={item}
-                      className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium tracking-wide text-cyan-200"
+                      className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium tracking-wide text-cyan-700 dark:text-cyan-200"
                     >
                       {item}
                     </li>
@@ -670,16 +691,16 @@ function App() {
             {projects.map((project) => (
               <article
                 key={project.title}
-                className="flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                <h3 className="text-lg font-semibold text-slate-100">{project.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{project.description}</p>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   {project.stack.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-200"
+                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
                     >
                       {tech}
                     </span>
@@ -687,10 +708,10 @@ function App() {
                 </div>
 
                 <div className="mt-6 flex items-center gap-4 text-sm">
-                  <a href={project.sourceUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                  <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
                     Source
                   </a>
-                  <a href={project.liveUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                  <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
                     Live Demo
                   </a>
                 </div>
@@ -706,16 +727,16 @@ function App() {
             {hardwareProjects.map((project) => (
               <article
                 key={project.title}
-                className="flex h-full flex-col rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="flex h-full flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                <h3 className="text-lg font-semibold text-slate-100">{project.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{project.description}</p>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
                 <div className="mt-5 flex flex-wrap gap-2">
                   {project.stack.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-200"
+                      className="rounded-md border border-cyan-400/40 bg-cyan-400/10 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:text-cyan-200"
                     >
                       {tech}
                     </span>
@@ -723,10 +744,10 @@ function App() {
                 </div>
 
                 <div className="mt-6 flex items-center gap-4 text-sm">
-                  <a href={project.sourceUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                  <a href={project.sourceUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
                     Source
                   </a>
-                  <a href={project.liveUrl} className="font-medium text-cyan-300 transition hover:text-cyan-200">
+                  <a href={project.liveUrl} className="font-medium text-cyan-700 transition hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200">
                     Demo
                   </a>
                 </div>
@@ -742,10 +763,10 @@ function App() {
             {services.map((service) => (
               <article
                 key={service.title}
-                className="rounded-xl border border-slate-800 bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                <h3 className="text-lg font-semibold text-slate-100">{service.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-slate-300">{service.summary}</p>
+                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{service.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{service.summary}</p>
               </article>
             ))}
           </div>
@@ -755,17 +776,17 @@ function App() {
           <SectionHeading eyebrow="Contact" title="Start a project or collaboration" />
 
           <div className="grid gap-8 lg:grid-cols-[1.05fr_1fr]">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-6">
-              <h3 className="text-xl font-semibold text-slate-100">Let&apos;s build something meaningful.</h3>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-300">
+            <div className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">Let&apos;s build something meaningful.</h3>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                 Share your project goals, timeline, and technical context. I&apos;ll get back with a practical,
                 structured plan for the next steps.
               </p>
             </div>
 
-            <form onSubmit={handleContactSubmit} className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-6">
+            <form onSubmit={handleContactSubmit} className="space-y-4 rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6">
               <div>
-                <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-200">
+                <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Full Name
                 </label>
                 <input
@@ -774,12 +795,12 @@ function App() {
                   type="text"
                   required
                   placeholder="Your name"
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-cyan-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-200">
+                <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Email Address
                 </label>
                 <input
@@ -788,12 +809,12 @@ function App() {
                   type="email"
                   required
                   placeholder="you@company.com"
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-cyan-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="mb-2 block text-sm font-medium text-slate-200">
+                <label htmlFor="message" className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">
                   Message
                 </label>
                 <textarea
@@ -802,11 +823,11 @@ function App() {
                   rows={5}
                   required
                   placeholder="Tell me about your goals, constraints, and timeline."
-                  className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 focus:border-cyan-300 focus:outline-none"
+                  className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-cyan-300 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
                 />
               </div>
 
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Messages are sent securely via Formspree.
               </p>
 
@@ -818,7 +839,7 @@ function App() {
                       ? 'text-emerald-300'
                       : submitStatus === 'error'
                         ? 'text-rose-300'
-                        : 'text-cyan-300',
+                        : 'text-cyan-700 dark:text-cyan-300',
                   ].join(' ')}
                 >
                   {submitMessage}
@@ -837,8 +858,8 @@ function App() {
         </section>
       </main>
 
-      <footer className="border-t border-slate-800/80 py-8">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-center text-sm text-slate-400 sm:flex-row sm:px-6 sm:text-left lg:px-10">
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 py-8">
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-center text-sm text-slate-600 dark:text-slate-400 sm:flex-row sm:px-6 sm:text-left lg:px-10">
           <p>© {new Date().getFullYear()} Jai Acedera. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <a
@@ -849,7 +870,7 @@ function App() {
                 event.preventDefault()
                 handleExternalRedirect(linkedInUrl)
               }}
-              className="transition hover:text-cyan-300"
+              className="transition hover:text-cyan-700 dark:hover:text-cyan-300"
             >
               LinkedIn
             </a>
@@ -861,7 +882,7 @@ function App() {
                 event.preventDefault()
                 handleExternalRedirect(githubUrl)
               }}
-              className="transition hover:text-cyan-300"
+              className="transition hover:text-cyan-700 dark:hover:text-cyan-300"
             >
               GitHub
             </a>
