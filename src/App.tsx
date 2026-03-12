@@ -1152,7 +1152,12 @@ function App() {
                         className="absolute left-1/2 top-1/2 flex h-full w-[min(82vw,320px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
                       >
                         <div className="flex h-full flex-col">
-                          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                          <div>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                            {project.title === 'Commissioned Project' && (
+                              <span className="mt-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-700">Commissioned Project</span>
+                            )}
+                          </div>
                           <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
                           <div className="mt-5 flex flex-wrap gap-2">
@@ -1217,7 +1222,12 @@ function App() {
                   key={`${project.title}-${desktopProjectStartIndex}-${index}`}
                   className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
                 >
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
+                    {project.title === 'Commissioned Project' && (
+                      <span className="mt-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 border border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-700">Commissioned Project</span>
+                    )}
+                  </div>
                   <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">{project.description}</p>
 
                   <div className="mt-5 flex flex-wrap gap-2">
@@ -1298,8 +1308,12 @@ function App() {
 
               <div className="relative h-full">
                 <AnimatePresence initial={false} custom={hardwareDirection}>
-                  {hardwareProjects.map((project, index) => {
-                    const position = getCarouselPosition(index, activeHardwareIndex, hardwareProjects.length)
+                  {[...hardwareProjects, {
+                    title: 'Commissioned Project',
+                    description: 'A custom hardware solution built for a client, featuring embedded systems integration and IoT connectivity.',
+                    stack: ['ESP32', 'Custom PCB', 'IoT', 'C++', 'MQTT']
+                  }].map((project, index) => {
+                    const position = getCarouselPosition(index, activeHardwareIndex, hardwareProjects.length + 1)
                     if (position === 'hidden') return null
 
                     return (
@@ -1364,7 +1378,11 @@ function App() {
             )}
 
             <div className="grid flex-1 gap-6 lg:grid-cols-3">
-              {visibleDesktopHardwareProjects.map((project, index) => (
+              {[...visibleDesktopHardwareProjects, {
+                title: 'Commissioned Project',
+                description: 'A custom hardware solution built for a client, featuring embedded systems integration and IoT connectivity.',
+                stack: ['ESP32', 'Custom PCB', 'IoT', 'C++', 'MQTT']
+              }].map((project, index) => (
                 <article
                   key={`${project.title}-${desktopHardwareStartIndex}-${index}`}
                   className="flex h-full min-h-105 max-h-105 overflow-hidden flex-col rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
