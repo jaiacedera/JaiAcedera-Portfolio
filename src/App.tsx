@@ -1,3 +1,17 @@
+// Custom hook to detect orientation
+function useOrientation() {
+  const [orientation, setOrientation] = React.useState(
+    window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
+  );
+  React.useEffect(() => {
+    function handleResize() {
+      setOrientation(window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  return orientation;
+}
 import Stack from './components/Stack';
 import React, { useState, useEffect, useRef } from 'react'
 import ProfileCard from './components/ProfileCard';
@@ -206,6 +220,7 @@ function SectionHeading({ title, eyebrow }: { title: string; eyebrow: string }) 
 }
 
 function App() {
+    const orientation = useOrientation();
   const linkedInUrl = 'https://www.linkedin.com/in/jairah-denise-acedera-17444a175?'
   const githubUrl = 'https://github.com/jaiacedera'
 
@@ -517,6 +532,7 @@ function App() {
     return () => clearTimeout(timer)
   }, [displayedRole, isDeleting, roleIndex, roles, typingSpeed])
 
+  // Add orientation as a class for optional CSS targeting
   return (
     <div
       className={[
@@ -524,6 +540,7 @@ function App() {
         isDarkMode
           ? 'bg-slate-950 text-slate-200'
           : 'bg-slate-100 text-slate-800',
+        orientation === 'portrait' ? 'orientation-portrait' : 'orientation-landscape',
       ].join(' ')}
     >
       <header
@@ -703,59 +720,112 @@ function App() {
       </header>
 
       <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-12 lg:px-10 lg:pt-14">
-        <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
-            <div>
-              <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
-                Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
-              </p>
-
-              <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
-                Designing and building performant digital products with precision.
-              </h1>
-
-              <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300 sm:mt-8 sm:text-lg">
-                I craft polished web experiences that prioritize maintainability, speed, and clean architecture. 
-                As a Computer Engineering graduate, I specialize in developing efficient software solutions that 
-                bridge the gap between high-level web development and real-world hardware integration.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-                <a
-                  href="#projects"
-                  className="w-full rounded-lg bg-cyan-400 px-6 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 sm:w-auto"
-                >
-                  View Projects
-                </a>
-                <a
-                  href="#contact"
-                  className="w-full rounded-lg border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-100 dark:hover:text-cyan-300 sm:w-auto"
-                >
-                  Let&apos;s Connect
-                </a>
+        {/* Render mobile or laptop design based on orientation */}
+        {orientation === 'portrait' ? (
+          // MOBILE DESIGN (portrait)
+          <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
+            <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+              {/* ...existing code for mobile/portrait hero... */}
+              <div>
+                <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
+                  Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
+                </p>
+                <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
+                  Designing and building performant digital products with precision.
+                </h1>
+                <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300 sm:mt-8 sm:text-lg">
+                  I craft polished web experiences that prioritize maintainability, speed, and clean architecture. 
+                  As a Computer Engineering graduate, I specialize in developing efficient software solutions that 
+                  bridge the gap between high-level web development and real-world hardware integration.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                  <a
+                    href="#projects"
+                    className="w-full rounded-lg bg-cyan-400 px-6 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 sm:w-auto"
+                  >
+                    View Projects
+                  </a>
+                  <a
+                    href="#contact"
+                    className="w-full rounded-lg border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-100 dark:hover:text-cyan-300 sm:w-auto"
+                  >
+                    Let&apos;s Connect
+                  </a>
+                </div>
+              </div>
+              <div className="relative mx-auto flex w-full justify-center lg:max-w-none">
+                <ProfileCard
+                  name="Jairah Denise C. Acedera"
+                  title="Computer Engineer"
+                  handle="javicodes"
+                  status="Online"
+                  contactText="Contact Me"
+                  avatarUrl="/profile-photo.jpg"
+                  showUserInfo={false}
+                  enableTilt={true}
+                  enableMobileTilt={false}
+                  onContactClick={() => console.log('Contact clicked')}
+                  behindGlowColor="rgba(125, 190, 255, 0.67)"
+                  iconUrl="/assets/demo/iconpattern.png"
+                  behindGlowEnabled={true}
+                  innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
+                />
               </div>
             </div>
-
-            <div className="relative mx-auto flex w-full justify-center lg:max-w-none">
-              <ProfileCard
-                name="Jairah Denise C. Acedera"
-                title="Computer Engineer"
-                handle="javicodes"
-                status="Online"
-                contactText="Contact Me"
-                avatarUrl="/profile-photo.jpg"
-                showUserInfo={false}
-                enableTilt={true}
-                enableMobileTilt={false}
-                onContactClick={() => console.log('Contact clicked')}
-                behindGlowColor="rgba(125, 190, 255, 0.67)"
-                iconUrl="/assets/demo/iconpattern.png"
-                behindGlowEnabled={true}
-                innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
-              />
+          </section>
+        ) : (
+          // LAPTOP DESIGN (landscape)
+          <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
+            <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+              {/* ...existing code for laptop/landscape hero... */}
+              <div>
+                <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
+                  Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
+                </p>
+                <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
+                  Designing and building performant digital products with precision.
+                </h1>
+                <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-300 sm:mt-8 sm:text-lg">
+                  I craft polished web experiences that prioritize maintainability, speed, and clean architecture. 
+                  As a Computer Engineering graduate, I specialize in developing efficient software solutions that 
+                  bridge the gap between high-level web development and real-world hardware integration.
+                </p>
+                <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+                  <a
+                    href="#projects"
+                    className="w-full rounded-lg bg-cyan-400 px-6 py-3 text-center text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 sm:w-auto"
+                  >
+                    View Projects
+                  </a>
+                  <a
+                    href="#contact"
+                    className="w-full rounded-lg border border-slate-300 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:text-slate-100 dark:hover:text-cyan-300 sm:w-auto"
+                  >
+                    Let&apos;s Connect
+                  </a>
+                </div>
+              </div>
+              <div className="relative mx-auto flex w-full justify-center lg:max-w-none">
+                <ProfileCard
+                  name="Jairah Denise C. Acedera"
+                  title="Computer Engineer"
+                  handle="javicodes"
+                  status="Online"
+                  contactText="Contact Me"
+                  avatarUrl="/profile-photo.jpg"
+                  showUserInfo={false}
+                  enableTilt={true}
+                  enableMobileTilt={false}
+                  onContactClick={() => console.log('Contact clicked')}
+                  behindGlowColor="rgba(125, 190, 255, 0.67)"
+                  iconUrl="/assets/demo/iconpattern.png"
+                  behindGlowEnabled={true}
+                  innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
+                />
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <section id="about" className="py-14 sm:py-20">
           <SectionHeading eyebrow="About Me" title="Building products with clarity and intent" />
