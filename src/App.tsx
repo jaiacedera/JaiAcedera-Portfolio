@@ -177,7 +177,7 @@ const techStackGroups: TechStackGroup[] = [
     items: ['Arduino', 'ESP32', 'Raspberry Pi Pico', 'STM32', 'Microcontrollers'],
   },
   {
-    category: 'Design, Collaboration & Tooling',
+    category: 'Design & Tooling',
     focus: 'Design workflow, version control, and build tools',
     items: ['Figma', 'Git', 'GitHub', 'Gradle'],
   },
@@ -221,13 +221,18 @@ function SectionHeading({ title, eyebrow }: { title: string; eyebrow: string }) 
 }
 
 function App() {
-    const orientation = useOrientation();
-  const linkedInUrl = 'https://www.linkedin.com/in/jairah-denise-acedera-17444a175?'
-  const githubUrl = 'https://github.com/jaiacedera'
+  // Tech stack mobile accordion state
+  const [activeTechIndex, setActiveTechIndex] = useState<number | null>(0);
+  const toggleTechIndex = (index: number) => {
+    setActiveTechIndex((prev) => (prev === index ? null : index));
+  };
+          const orientation = useOrientation();
+        const linkedInUrl = 'https://www.linkedin.com/in/jairah-denise-acedera-17444a175?'
+        const githubUrl = 'https://github.com/jaiacedera'
 
-  const handleExternalRedirect = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer')
-  }
+          const handleExternalRedirect = (url: string) => {
+            window.open(url, '_blank', 'noopener,noreferrer')
+          }
 
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -727,10 +732,6 @@ function App() {
           <section id="hero" className="min-h-screen flex items-start pb-16 pt-0 sm:pb-24 sm:pt-0 lg:pt-0">
             <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
               {/* ...existing code for mobile/portrait hero... */}
-              <div>
-                <p className="mb-6 text-xs font-medium uppercase tracking-[0.24em] text-cyan-600 dark:text-cyan-300/80">
-                  Aspiring <span>{displayedRole}<span className="animate-blink">|</span></span>
-                </p>
                 <h1 className="max-w-4xl text-3xl font-semibold leading-tight text-slate-900 dark:text-slate-100 sm:text-5xl lg:text-6xl">
                   Designing and building performant digital products with precision.
                 </h1>
@@ -753,7 +754,6 @@ function App() {
                     Let&apos;s Connect
                   </a>
                 </div>
-              </div>
               <div className="relative mx-auto flex w-full justify-center lg:max-w-none">
                 <ProfileCard
                   name="Jairah Denise C. Acedera"
@@ -998,18 +998,90 @@ function App() {
         <section id="tech-stack" className="py-14 sm:py-20">
           <SectionHeading eyebrow="Tech Stack" title="Tools I use to build fast, reliable products" />
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          {/* Mobile block type - 2 columns with overlapping full-width details */}
+          <div className="relative grid grid-cols-2 gap-3 overflow-visible sm:hidden">
+            {techStackGroups.map((group, index) => {
+              const isOpen = activeTechIndex === index
+              const isLeftColumn = index % 2 === 0
+
+              return (
+                <div
+                  key={group.category}
+                  className="relative overflow-visible"
+                >
+                  <div className="rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70">
+                    <button
+                      type="button"
+                      onClick={() => toggleTechIndex(index)}
+                      className="flex min-h-20 w-full items-center justify-between px-4 py-4 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                      aria-expanded={isOpen}
+                      aria-label={`Toggle ${group.category}`}
+                    >
+                      <span className="max-w-[78%] text-sm font-semibold leading-snug text-slate-900 dark:text-slate-100">
+                      {group.category}
+                    </span>
+
+                    <span
+                      className={`shrink-0 text-lg font-semibold text-cyan-600 transition-transform dark:text-cyan-300 ${
+                        isOpen ? 'rotate-45' : 'rotate-0'
+                      }`}
+                    >
+                      +
+                    </span>
+                    </button>
+                  </div>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                        transition={{ duration: 0.22, ease: 'easeOut' }}
+                        className={`absolute top-full z-30 mt-2 ${
+                          isLeftColumn ? 'left-0' : 'right-0'
+                        }`}
+                        style={{ width: 'calc(200% + 0.75rem)' }}
+                      >
+                        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
+                          <p className="text-sm text-slate-600 dark:text-slate-300">
+                            {group.focus}
+                          </p>
+
+                          <ul className="mt-4 flex flex-wrap gap-2">
+                            {group.items.map((item) => (
+                              <li
+                                key={item}
+                                className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1.5 text-xs font-medium tracking-wide text-cyan-700 dark:text-cyan-200"
+                              >
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Desktop grid */}
+          <div className="hidden gap-6 sm:grid sm:grid-cols-2">
             {techStackGroups.map((group) => (
               <article
                 key={group.category}
-                className="relative overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900/70 p-6 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="relative flex flex-col justify-center items-center min-h-56 min-w-72 w-full h-full overflow-visible rounded-xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-cyan-400/60 dark:border-slate-800 dark:bg-slate-900/70"
               >
                 <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-cyan-400/10 blur-2xl" />
-
-                  <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{group.category}</h3>
-                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{group.focus}</p>
-
-                <ul className="mt-5 flex flex-wrap gap-2.5">
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                  {group.category}
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                  {group.focus}
+                </p>
+                <ul className="mt-5 flex flex-wrap gap-2.5 justify-center">
                   {group.items.map((item) => (
                     <li
                       key={item}
@@ -1029,6 +1101,11 @@ function App() {
 
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
+            {/*
+              Hardware project container size is set here:
+              - Mobile: className="relative h-105" (height: 26.25rem or 420px)
+              - Desktop: className="flex h-full min-h-105 max-h-105 ..." (height: 26.25rem or 420px)
+            */}
             <div
               className="relative h-105"
               onTouchStart={(e) => { projectTouchStartX.current = e.touches[0].clientX }}
@@ -1072,7 +1149,7 @@ function App() {
                         initial={getCarouselVariant('hidden', projectDirection)}
                         animate={getCarouselVariant(position, projectDirection)}
                         exit={getCarouselVariant('hidden', projectDirection)}
-                        className="absolute left-1/2 top-1/2 flex h-full w-[min(82vw,320px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
+                        className="absolute left-1/2 top-1/2 flex h-full w-[min(82vw,320px)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900/80"
                       >
                         <div className="flex h-full flex-col">
                           <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{project.title}</h3>
@@ -1182,6 +1259,12 @@ function App() {
 
           {/* Mobile carousel */}
           <div className="space-y-4 lg:hidden">
+            {/*
+              Hardware project container size is set here:
+              - Mobile: className="relative h-105" (height: 26.25rem or 420px)
+              - Desktop: className="flex h-full min-h-105 max-h-105 ..." (height: 26.25rem or 420px)
+              This matches the Projects section for visual consistency.
+            */}
             <div
               className="relative h-105"
               onTouchStart={(e) => { hardwareTouchStartX.current = e.touches[0].clientX }}
@@ -1299,7 +1382,6 @@ function App() {
                       </span>
                     ))}
                   </div>
-
                 </article>
               ))}
             </div>
