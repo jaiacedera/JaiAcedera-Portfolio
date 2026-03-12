@@ -75,9 +75,10 @@ const experiences: ExperienceItem[] = [
     company: 'Creotec Philippines Inc',
     period: 'February 2026 - April 2026',
     achievements: [
-      'Built responsive user interfaces using React and TypeScript under senior developer mentorship.',
-      'Implemented reusable components and assisted with API integration for dashboard features.',
-      'Contributed bug fixes, testing support, and UI polish across sprint deliverables.',
+      'Engineered an interactive wiring simulation system with structured difficulty progression to model real-world mechatronics tasks.',
+      'Developed a real-time progress tracking engine that monitors trainee competency growth and marks simulation milestones.',
+      'Designed a seamless trainee interface for navigating digital learning modules and launching integrated hardware simulations.',
+      'Optimized the simulation workflow to support the project’s goal of compressing a 20-day training curriculum into a single day.',
     ],
   },
 ]
